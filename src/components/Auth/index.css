@@ -1,0 +1,48 @@
+.login-container {
+  width: 700px;
+  padding: 125px;
+
+  .form-validation {
+    .email-input {
+      margin-bottom: 50px;
+    }
+    .password-input {
+      margin-bottom: 50px;
+    }
+    .login-btn {
+      cursor: pointer;
+    }
+  }
+}
+.register-container {
+  width: 700px;
+  padding: 125px;
+  border-radius: 10px;
+
+  .form-register {
+    .form-name {
+      margin-bottom: 50px;
+    }
+    .form-email {
+      margin-bottom: 50px;
+    }
+    .form-pswd {
+      margin-bottom: 50px;
+    }
+  }
+}
+
+.auth-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .auth-wrapper {
+    .container-card {
+      .Tabs {
+        min-width: 100%;
+        border-radius: 10px;
+      }
+    }
+  }
+}
