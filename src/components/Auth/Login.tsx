@@ -36,7 +36,7 @@ export const Login = ({ setSelected }: Props) => {
     try {
       await login(data).unwrap();
       await triggerCurrentQuery().unwrap();
-      navigate('/ContentPage');
+      navigate('/maincontent');
     } catch (error) {
       if (hasErrorField(error)) {
         setError(error.data.error);
@@ -54,7 +54,7 @@ export const Login = ({ setSelected }: Props) => {
           className="email-input"
           required="Поле є обовязковим"
         />
-        {errors.email && <p>{errors.email.message}</p>}
+        {/* {errors.email && <p>{errors.email.message}</p>} */}
 
         <Input
           control={control}
@@ -64,7 +64,7 @@ export const Login = ({ setSelected }: Props) => {
           className="password-input"
           required="Поле є обовязковим"
         />
-        {errors.password && <p>{errors.password.message}</p>}
+        {/* {errors.password && <p>{errors.password.message}</p>} */}
 
         <p className="text-center text-small">
           Немає акаунта?{' '}

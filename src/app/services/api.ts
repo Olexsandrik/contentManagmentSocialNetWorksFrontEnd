@@ -3,7 +3,7 @@ import { BASE_URL } from "../../constants"
 import { RootState } from "../store"
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${BASE_URL}/api`,
+  baseUrl: `${BASE_URL}/server`,
   prepareHeaders: (headers, { getState }) => {
     const token =
       (getState() as RootState).user.token || localStorage.getItem("token")

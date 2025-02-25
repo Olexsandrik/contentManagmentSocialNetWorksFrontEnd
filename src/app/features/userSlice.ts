@@ -1,7 +1,8 @@
-import { User } from '@nextui-org/react';
-import { createSlice } from '@reduxjs/toolkit';
-import { userApi } from '../../app/services/userApi';
-import { RootState } from '../store';
+// import { User } from '@nextui-org/react';
+import { createSlice } from "@reduxjs/toolkit";
+import { userApi } from "../../app/services/userApi";
+import { RootState } from "../store";
+import { User } from "../type";
 
 interface InitialState {
   user: User | null;
@@ -19,7 +20,7 @@ const initialState: InitialState = {
 };
 
 const slice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     // actions
@@ -40,7 +41,7 @@ const slice = createSlice({
         userApi.endpoints.getUserById.matchFulfilled,
         (state, action) => {
           state.user.user = action.payload;
-        },
+        }
       );
   },
 });
