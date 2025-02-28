@@ -1,11 +1,12 @@
-import { useLazyCurrentQuery, useLoginMutation } from '../../app/services/userApi';
-import { hasErrorField } from '../../app/utils/hasErrorField';
-import { Button, Link } from '@nextui-org/react';
-import { useForm } from 'react-hook-form';
-import { Input } from '../Input/index';
-import './index.css';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { hasErrorField } from "../../app/utils/hasErrorField";
+import { Button, Link } from "@nextui-org/react";
+import { useForm } from "react-hook-form";
+import { Input } from "../Input/index";
+import "./index.css";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { BASE_URL } from "../../constants";
+
 type Props = {
   setSelected: (value: string) => void;
 };
@@ -14,69 +15,89 @@ type Login = {
   email: string;
   password: string;
 };
+
 export const Login = ({ setSelected }: Props) => {
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<Login>({
-    mode: 'onChange',
-    reValidateMode: 'onBlur',
+    mode: "onChange",
+    reValidateMode: "onBlur",
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
-  const [login, { isLoading }] = useLoginMutation();
-  const navigate = useNavigate();
 
-  const [error, setError] = useState('');
-  const [triggerCurrentQuery] = useLazyCurrentQuery();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const onSubmit = async (data: Login) => {
+    setIsLoading(true);
+    setErrorMessage("");
+
     try {
-      await login(data).unwrap();
-      await triggerCurrentQuery().unwrap();
-      navigate('/maincontent');
-    } catch (error) {
-      if (hasErrorField(error)) {
-        setError(error.data.error);
+      const response = await fetch(`${BASE_URL}/server/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Помилка входу");
       }
+
+      localStorage.setItem("token", result.token);
+
+      navigate("/maincontent");
+    } catch (error: any) {
+      setErrorMessage(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <div className="login-container">
       <form className="form-validation" onSubmit={handleSubmit(onSubmit)}>
         <Input
           control={control}
           name="email"
-          label="email"
+          label="Email"
           type="email"
           className="email-input"
-          required="Поле є обовязковим"
+          required="Поле є обов’язковим"
         />
-        {/* {errors.email && <p>{errors.email.message}</p>} */}
 
         <Input
           control={control}
           name="password"
-          label="пароль"
+          label="Пароль"
           type="password"
           className="password-input"
-          required="Поле є обовязковим"
+          required="Поле є обов’язковим"
         />
-        {/* {errors.password && <p>{errors.password.message}</p>} */}
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <p className="text-center text-small">
-          Немає акаунта?{' '}
+          Немає акаунта?{" "}
           <Link
             size="sm"
-            className="cursore-pointer"
-            onPress={() => setSelected('sign-up')}
+            className="cursor-pointer"
+            onPress={() => setSelected("sign-up")}
           >
-            зарегайтесь
+            Зареєструйтесь
           </Link>
         </p>
-        <div className="flex gap-2 jusify-end">
+
+        <div className="flex gap-2 justify-end">
           <Button
             fullWidth
             color="primary"

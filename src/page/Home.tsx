@@ -1,8 +1,9 @@
-import { useNavigate } from 'react-router-dom';
-import './index.css';
+import { useNavigate } from "react-router-dom";
+import "./index.css";
 export const Home = () => {
   const router = useNavigate();
 
+  console.log("f");
   return (
     <div className="container">
       <div className="container-wrapper">
@@ -28,7 +29,7 @@ export const Home = () => {
           <option value="UA">UA</option>
         </select>
         <div className="auth-warapper">
-          <div className="auth" onClick={() => router('/auth')}>
+          <div className="auth" onClick={() => router("/auth")}>
             Login
           </div>
         </div>

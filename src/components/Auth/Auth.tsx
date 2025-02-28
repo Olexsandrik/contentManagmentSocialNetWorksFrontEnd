@@ -1,11 +1,11 @@
-import { Card, CardBody, Tab, Tabs } from '@nextui-org/react';
-import { Login } from './Login';
-import { Register } from './Register';
-import './index.css';
-import { useState } from 'react';
+import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
+import { Login } from "./Login";
+import { Register } from "./Register";
+import "./index.css";
+import { useState } from "react";
 
 export const Auth = () => {
-  const [selected, setSelected] = useState('login');
+  const [selected, setSelected] = useState("login");
 
   return (
     <div className="auth-container">
