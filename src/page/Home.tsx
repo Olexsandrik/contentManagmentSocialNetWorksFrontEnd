@@ -1,41 +1,52 @@
 import { useNavigate } from "react-router-dom";
-import "./index.css";
+
 export const Home = () => {
   const router = useNavigate();
 
-  console.log("f");
   return (
-    <div className="container">
-      <div className="container-wrapper">
-        <div className="logo">CoolCompamy</div>
+    <div className="container mx-auto">
+      <div className="relative flex justify-between items-center py-4">
+        <div className="text-lg font-bold">CoolCompany</div>
 
-        <div className="nav-navigation">
-          <ul className="nav-items">
-            <a href="#">
-              <li className="nav-item">Інструкція</li>
-            </a>
-            <a href="#">
-              <li className="nav-item">допомога</li>
-            </a>
-            <a href="#">
-              <li className="nav-item">підписка</li>
-            </a>
+        <nav>
+          <ul className="flex space-x-5">
+            <li>
+              <a href="#" className="hover:text-blue-500">
+                Інструкція
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-blue-500">
+                Допомога
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-blue-500">
+                Підписка
+              </a>
+            </li>
           </ul>
-        </div>
+        </nav>
 
-        <select name="language" id="">
+        <select className="border rounded px-2 py-1 text-sm">
           <option value="">Language</option>
           <option value="EN">EN</option>
           <option value="UA">UA</option>
         </select>
-        <div className="auth-warapper">
-          <div className="auth" onClick={() => router("/auth")}>
+
+        <div className="flex items-center">
+          <button
+            className="ml-5 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={() => router("/auth")}
+          >
             Login
-          </div>
+          </button>
         </div>
       </div>
 
-      <div className="description">content</div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-lg">
+        content
+      </div>
     </div>
   );
 };

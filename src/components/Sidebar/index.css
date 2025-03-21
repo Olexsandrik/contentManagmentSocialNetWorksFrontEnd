@@ -1,0 +1,9 @@
+.sidebar-container {
+  width: 250px; 
+  height: 50vh; 
+
+  border: 2px solid black;
+  border-radius: 40px;
+  padding: 20px;
+  box-sizing: border-box;
+}
