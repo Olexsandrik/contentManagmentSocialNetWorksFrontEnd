@@ -10,9 +10,7 @@ import {
   MessageCircle,
   Send,
 } from "lucide-react";
-import { BASE_URL } from "../../constants";
-import { useEffect, useState } from "react";
-import { User as mainUser } from "../../app/type";
+import { useSidebar } from "../../utils/useSidebar";
 
 const navItems = [
   { icon: Home, label: "Dashboard", route: "dashboard" },
@@ -25,43 +23,7 @@ const navItems = [
 export const Sidebar = () => {
   const navigate = useNavigate();
 
-  const [currentUser, setCurrentUser] = useState<mainUser | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setIsLoading(true);
-
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          navigate("/auth");
-          return;
-        }
-
-        const response = await fetch(`${BASE_URL}/server/current`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Помилка запиту: ${response.status}`);
-        }
-        const data = await response.json();
-
-        setCurrentUser(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, [navigate]);
-
+  const { currentUser } = useSidebar("server/current");
   const handleLogOut = () => {
     localStorage.removeItem("token");
 

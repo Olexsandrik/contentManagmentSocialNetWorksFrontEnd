@@ -1,14 +1,8 @@
 import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { Input } from "../Input";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-type Register = {
-  email: string;
-  name: string;
-  password: string;
-};
+import { useAuth } from "../../utils/useAuth";
+import { Register as AuthRegister } from "../../app/type";
 
 type Props = {
   setSelected: (value: string) => void;
@@ -19,7 +13,7 @@ export const Register = ({ setSelected }: Props) => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<Register>({
+  } = useForm<AuthRegister>({
     mode: "onChange",
     reValidateMode: "onBlur",
     defaultValues: {
@@ -29,38 +23,10 @@ export const Register = ({ setSelected }: Props) => {
     },
   });
 
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const onSubmit = async (data: Register) => {
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("http://localhost:3000/server/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Помилка реєстрації");
-      }
-
-      localStorage.setItem("token", result.token);
-
-      setSelected("login");
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { onSubmit, isLoading, errorMessage } = useAuth(
+    "server/register",
+    setSelected
+  );
 
   return (
     <form
@@ -92,7 +58,7 @@ export const Register = ({ setSelected }: Props) => {
         className="w-full p-3  rounded-md"
       />
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+      {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
 
       <p className="text-center text-sm">
         Уже є акаунт?{" "}

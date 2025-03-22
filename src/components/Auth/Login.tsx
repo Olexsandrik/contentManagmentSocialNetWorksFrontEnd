@@ -2,19 +2,11 @@ import { hasErrorField } from "../../app/utils/hasErrorField";
 import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { Input } from "../Input/index";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { BASE_URL } from "../../constants";
-import { Loading } from "../Loading";
 import { FacebookAuth } from "../FacebookAuth";
-
+import { useAuth } from "../../utils/useAuth";
+import { Login as LoginType } from "../../app/type";
 type Props = {
   setSelected: (value: string) => void;
-};
-
-type Login = {
-  email: string;
-  password: string;
 };
 
 export const Login = ({ setSelected }: Props) => {
@@ -22,7 +14,7 @@ export const Login = ({ setSelected }: Props) => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<Login>({
+  } = useForm<LoginType>({
     mode: "onChange",
     reValidateMode: "onBlur",
     defaultValues: {
@@ -31,37 +23,7 @@ export const Login = ({ setSelected }: Props) => {
     },
   });
 
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const onSubmit = async (data: Login) => {
-    setIsLoading(true);
-    setErrorMessage("");
-
-    try {
-      const response = await fetch(`${BASE_URL}/server/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Помилка входу");
-      }
-
-      localStorage.setItem("token", result.token);
-      navigate("/maincontent");
-    } catch (error: any) {
-      setErrorMessage(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { onSubmit, isLoading, errorMessage } = useAuth("server/login");
 
   return (
     <form
