@@ -7,7 +7,7 @@ import { ClimbingBoxLoader } from "react-spinners";
 
 export const Layout = () => {
   return (
-    <div className="container mx-auto flex">
+    <div className="flex min-h-screen">
       <Sidebar />
       <main className="flex-1 p-8">
         <Outlet />

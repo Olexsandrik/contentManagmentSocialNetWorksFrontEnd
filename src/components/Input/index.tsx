@@ -1,6 +1,6 @@
-import { Input as NextInput } from '@nextui-org/react';
-import React from 'react';
-import { Control, useController } from 'react-hook-form';
+import { Input as NextInput } from "@nextui-org/react";
+import React from "react";
+import { Control, useController } from "react-hook-form";
 
 type Props = {
   name: string;
@@ -18,7 +18,7 @@ export const Input = ({
   placeholder,
   type,
   control,
-  required = '',
+  required = "",
 
   className,
 }: Props) => {
@@ -45,10 +45,10 @@ export const Input = ({
       isInvalid={invalid}
       onChange={field.onChange}
       onBlur={field.onBlur}
-      errorMessage={`${errors[name]?.message ?? ''}`}
+      errorMessage={`${errors[name]?.message ?? ""}`}
       classNames={{
-        errorMessage: 'text-red-500 text-sm',
+        errorMessage: "text-red-500 text-sm",
       }}
-    ></NextInput>
+    />
   );
 };

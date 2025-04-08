@@ -6,43 +6,22 @@ export type User = {
   password?: string | null;
   provider?: string | null;
   accountId?: string | null;
-  avatarUrl?: string | null;
-  createdAt: Date;
-  ToDo?: ToDo[];
-  info?: Info | null;
-  infoData?: InfoDataSocial[];
+  avatarUrl?: File | null | undefined | string;
+  createdAt?: Date;
 };
 
-export type InfoDataSocial = {
-  id: number;
+export type Review = {
+  id: string;
   userId: number;
-  user?: User;
-  provider: string;
-  followersCount: number;
-  mediaCount: number;
-  likesCount: number;
-  engagementRate?: number | null;
-  profileUsername: string;
-  profilePictureUrl: string;
+  user: {
+    id: number | null | undefined;
+    name: string | null | undefined;
+    avatarUrl: File | null | undefined | string;
+  };
+  typeOfReviews: string;
+  topic: string;
+  messages: string;
   createdAt: Date;
-};
-
-export type ToDo = {
-  id: number;
-  userId: number;
-  user?: User;
-  date: Date;
-  content: string;
-  completed: boolean;
-  createdAt: Date;
-  chatGptId?: number | null;
-  chatGpt?: ChatGPT | null;
-};
-
-export type ChatGPT = {
-  id: number;
-  content: string;
-  todos?: ToDo[];
 };
 
 export type Info = {

@@ -1,9 +1,8 @@
-import { hasErrorField } from "../../app/utils/hasErrorField";
 import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { Input } from "../Input/index";
 import { FacebookAuth } from "../FacebookAuth";
-import { useAuth } from "../../utils/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Login as LoginType } from "../../app/type";
 type Props = {
   setSelected: (value: string) => void;

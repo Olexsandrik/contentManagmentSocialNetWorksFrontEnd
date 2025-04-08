@@ -2,8 +2,15 @@ import { useEffect, useState } from "react";
 import { User as mainUser } from "../app/type";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
+
+type UserSettings = {
+  avatarUrl?: string | File | null;
+  avatarFile?: File | null | undefined;
+  name: string | null;
+  email: string | null;
+};
 export function useSidebar(mainUrl: string) {
-  const [currentUser, setCurrentUser] = useState<mainUser | null>(null);
+  const [currentUser, setCurrentUser] = useState<UserSettings | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -38,6 +45,6 @@ export function useSidebar(mainUrl: string) {
         setIsLoading(false);
       }
     })();
-  }, [navigate]);
-  return { currentUser };
+  }, [navigate, mainUrl]);
+  return { currentUser, setCurrentUser };
 }

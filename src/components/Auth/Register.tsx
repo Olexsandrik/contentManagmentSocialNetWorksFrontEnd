@@ -1,7 +1,7 @@
 import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { Input } from "../Input";
-import { useAuth } from "../../utils/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Register as AuthRegister } from "../../app/type";
 
 type Props = {

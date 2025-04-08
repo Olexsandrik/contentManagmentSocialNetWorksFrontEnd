@@ -1,54 +1,48 @@
-import type React from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Avatar, Button } from "@nextui-org/react";
-import {
-  Home,
-  FileText,
-  BarChart,
-  User,
-  LogOut,
-  MessageCircle,
-  Send,
-} from "lucide-react";
-import { useSidebar } from "../../utils/useSidebar";
+import { NavLink, useNavigate } from "react-router-dom";
+import { Avatar, Button } from "@mui/material";
+import { Home, BarChart, LogOut, Send, Settings, ListIcon } from "lucide-react";
+import { useSidebar } from "../../hooks/useSidebarGet";
+import { BASE_URL } from "../../constants";
 
 const navItems = [
-  { icon: Home, label: "Dashboard", route: "dashboard" },
-  { icon: FileText, label: "Documents", route: "documents" },
-  { icon: BarChart, label: "Analytics", route: "analitics" },
-  { icon: MessageCircle, label: "ChatGPT", route: "chatai" },
-  { icon: Send, label: "Post", route: "postsocial" },
+  { icon: Home, label: "Дашборд", route: "dashboard" },
+  { icon: BarChart, label: "Аналітика", route: "analitics" },
+  { icon: Send, label: "Пост", route: "postsocial" },
+  { icon: ListIcon, label: "TaskManager", route: "ToDoList" },
+];
+
+const accountItems = [
+  { icon: Settings, label: "Налаштування", route: "settings" },
 ];
 
 export const Sidebar = () => {
   const navigate = useNavigate();
-
   const { currentUser } = useSidebar("server/current");
+
   const handleLogOut = () => {
     localStorage.removeItem("token");
-
     navigate("/");
   };
+
   return (
-    <div className="w-[350px]  bg-gray-100 h-[1000px] flex flex-col shadow-lg rounded-[40px] mt-10">
-      <div className="p-5">
-        <div className="flex items-center gap-3 mb-6 ">
+    <div className="w-[400px] bg-white h-screen flex flex-col border-r border-gray-100">
+      <div className="p-4 border-b border-gray-100">
+        <div className="flex items-center gap-3">
           <Avatar
-            src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
-            size="lg"
+            src={`${BASE_URL}${currentUser?.avatarUrl ?? undefined}`}
+            className="w-00 h-20 border border-gray-300"
           />
+
           <div>
-            <h3 className="font-medium">{currentUser?.name}</h3>
-            <p className="text-xs text-gray-600">{currentUser?.email}</p>
+            <h3 className="font-medium text-sm">{currentUser?.name}</h3>
+            <p className="text-xs text-gray-500">{currentUser?.email}</p>
           </div>
         </div>
       </div>
 
-      <nav className="flex-grow">
-        <div className="px-4 py-2">
-          <h4 className="text-xs font-semibold text-gray-600 uppercase">
-            Navigation
-          </h4>
+      <div className="flex-grow overflow-y-auto py-4">
+        <div className="px-4 mb-2">
+          <h4 className="text-xs font-medium text-gray-500 mb-2">НАВІГАЦІЯ</h4>
         </div>
         <ul>
           {navItems.map((item) => (
@@ -56,53 +50,52 @@ export const Sidebar = () => {
               <NavLink
                 to={item.route}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-5 py-2 text-sm rounded-md ${
+                  `flex items-center gap-3 px-4 py-2 text-sm ${
                     isActive
-                      ? "bg-blue-500 text-white"
-                      : "text-gray-700 hover:bg-gray-200"
+                      ? "bg-blue-50 text-blue-600 border-l-4 border-blue-500"
+                      : "text-gray-700 hover:bg-gray-50"
                   }`
                 }
               >
-                <item.icon className="w-5 h-5" />
+                <item.icon className="w-[18px] h-[18px]" />
                 <span>{item.label}</span>
               </NavLink>
             </li>
           ))}
         </ul>
 
-        <div className="px-4 py-2 mt-6">
-          <h4 className="text-xs font-semibold text-gray-600 uppercase">
-            Account
-          </h4>
+        <div className="px-4 mt-6 mb-2">
+          <h4 className="text-xs font-medium text-gray-500 mb-2">АКАУНТ</h4>
         </div>
         <ul>
-          <li>
-            <NavLink
-              to="/profile"
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2 text-sm rounded-md ${
-                  isActive
-                    ? "bg-blue-500 text-white"
-                    : "text-gray-700 hover:bg-gray-200"
-                }`
-              }
-            >
-              <User className="w-5 h-5" />
-              <span>Profile</span>
-            </NavLink>
-          </li>
+          {accountItems.map((item) => (
+            <li key={item.route}>
+              <NavLink
+                to={item.route}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-2 text-sm ${
+                    isActive
+                      ? "bg-blue-50 text-blue-600 border-l-4 border-blue-500"
+                      : "text-gray-700 hover:bg-gray-50"
+                  }`
+                }
+              >
+                <item.icon className="w-[18px] h-[18px]" />
+                <span>{item.label}</span>
+              </NavLink>
+            </li>
+          ))}
         </ul>
-      </nav>
+      </div>
 
-      <div className="p-4">
+      <div className="p-4 mt-auto">
         <Button
-          color="danger"
-          variant="flat"
-          startContent={<LogOut className="w-5 h-5" />}
-          className="w-full justify-start rounded-3xl bg-red-500 text-white hover:bg-red-600 py-3"
+          variant="contained"
+          startIcon={<LogOut className="w-4 h-4" />}
+          className="w-full justify-start text-red-600 bg-red-50 hover:bg-red-100"
           onClick={handleLogOut}
         >
-          Logout
+          Вийти
         </Button>
       </div>
     </div>
