@@ -7,10 +7,10 @@ function isRegister(data: Login | Register): data is Register {
   return "name" in data;
 }
 
-export function useAuth(
+export const useAuth = (
   mainUrl: string,
   setSelected?: (value: string) => void
-) {
+) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,4 +48,4 @@ export function useAuth(
     }
   };
   return { onSubmit, isLoading, errorMessage };
-}
+};

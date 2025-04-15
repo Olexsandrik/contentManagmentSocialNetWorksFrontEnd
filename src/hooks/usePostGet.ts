@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
-import { User as mainUser } from "../app/type";
+import { SocialMediaComment, SocialMediaPost } from "../app/type";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
 
-type UserSettings = {
-  avatarUrl?: string | File | null;
-  avatarFile?: File | null | undefined;
-  name: string | null;
-  email: string | null;
-};
-export function useSidebar(mainUrl: string) {
-  const [currentUser, setCurrentUser] = useState<UserSettings | null>(null);
+export function usePostGet(mainUrl: string) {
+  const [posts, setPosts] = useState<SocialMediaPost[]>([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -37,8 +32,8 @@ export function useSidebar(mainUrl: string) {
           throw new Error(`Помилка запиту: ${response.status}`);
         }
         const data = await response.json();
-
-        setCurrentUser(data);
+        console.log(data);
+        setPosts(data);
       } catch (error: any) {
         setError(error.message);
       } finally {
@@ -46,5 +41,5 @@ export function useSidebar(mainUrl: string) {
       }
     })();
   }, [navigate, mainUrl]);
-  return { currentUser, isLoading, error };
+  return { posts, setPosts, isLoading, error };
 }

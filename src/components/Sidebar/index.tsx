@@ -3,12 +3,13 @@ import { Avatar, Button } from "@mui/material";
 import { Home, BarChart, LogOut, Send, Settings, ListIcon } from "lucide-react";
 import { useSidebar } from "../../hooks/useSidebarGet";
 import { BASE_URL } from "../../constants";
-
+import { Share2 } from "lucide-react";
 const navItems = [
   { icon: Home, label: "Дашборд", route: "dashboard" },
-  { icon: BarChart, label: "Аналітика", route: "analitics" },
+  { icon: BarChart, label: "Аналітика", route: "analytics" },
   { icon: Send, label: "Пост", route: "postsocial" },
   { icon: ListIcon, label: "TaskManager", route: "ToDoList" },
+  { icon: Share2, label: "AnalyticsAI", route: "analyticsai" },
 ];
 
 const accountItems = [
@@ -17,7 +18,7 @@ const accountItems = [
 
 export const Sidebar = () => {
   const navigate = useNavigate();
-  const { currentUser } = useSidebar("server/current");
+  const { currentUser, isLoading, error } = useSidebar("server/current");
 
   const handleLogOut = () => {
     localStorage.removeItem("token");

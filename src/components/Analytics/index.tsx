@@ -1,4 +1,7 @@
+"use client";
+
 import type React from "react";
+
 import { useState } from "react";
 import { BarChart, LineChart, PieChart } from "lucide-react";
 import {
@@ -15,58 +18,16 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { usePostGet } from "../../hooks/usePostGet";
+import type {
+  CardProps,
+  EngagementData,
+  PostData,
+  TabContentProps,
+} from "../../../src/app/type";
+import { Loading } from "../Loading";
 
-interface PostData {
-  month: string;
-  posts: number;
-  likes: number;
-}
-
-interface EngagementData {
-  month: string;
-  engagement: number;
-}
-
-const postData: PostData[] = [
-  { month: "Jan", posts: 12, likes: 145 },
-  { month: "Feb", posts: 19, likes: 237 },
-  { month: "Mar", posts: 15, likes: 186 },
-  { month: "Apr", posts: 27, likes: 324 },
-  { month: "May", posts: 24, likes: 402 },
-  { month: "Jun", posts: 32, likes: 529 },
-  { month: "Jul", posts: 29, likes: 478 },
-  { month: "Aug", posts: 35, likes: 589 },
-  { month: "Sep", posts: 41, likes: 673 },
-  { month: "Oct", posts: 38, likes: 712 },
-  { month: "Nov", posts: 43, likes: 825 },
-  { month: "Dec", posts: 51, likes: 967 },
-];
-
-const totalPosts: number = postData.reduce((sum, item) => sum + item.posts, 0);
-const totalLikes: number = postData.reduce((sum, item) => sum + item.likes, 0);
-const avgLikesPerPost: number = Math.round(totalLikes / totalPosts);
-
-const engagementData: EngagementData[] = postData.map((item) => ({
-  month: item.month,
-  engagement: Math.round(totalLikes / totalPosts),
-}));
-
-interface CardProps {
-  title: string;
-  value: number;
-  change: number;
-  icon: React.ReactNode;
-  iconBgColor: string;
-  iconColor: string;
-  headerBgColor: string;
-  titleColor: string;
-}
-
-interface TabContentProps {
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}
+const mainTab = ["overview", "posts", "likes", "engagement"];
 
 const tooltipStyle = {
   backgroundColor: "white",
@@ -75,51 +36,60 @@ const tooltipStyle = {
   border: "none",
 };
 
-export const AnalyticsDashboard: React.FC = () => {
+export const AnalyticsDashboard = () => {
   const [activeTab, setActiveTab] = useState<string>("overview");
 
-  const StatCard: React.FC<CardProps> = ({
-    title,
-    value,
-    change,
-    icon,
-    iconBgColor,
-    headerBgColor,
-    titleColor,
-  }) => {
-    return (
-      <div className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 bg-white">
-        <div
-          className={`flex flex-row items-center justify-between space-y-0 p-4 ${headerBgColor}`}
-        >
-          <h3 className={`text-sm font-medium ${titleColor}`}>{title}</h3>
-          <div className={`rounded-full ${iconBgColor} p-2`}>{icon}</div>
-        </div>
-        <div className="p-6 pt-6">
-          <div className="text-3xl font-bold text-[#212121]">{value}</div>
-          <p className="text-xs text-[#757575] mt-1">
-            +{change} за останній місяць
-          </p>
-        </div>
-      </div>
-    );
-  };
+  const { posts, isLoading, error } = usePostGet("server/instagram-data");
 
-  const TabContent: React.FC<TabContentProps> = ({
-    title,
-    description,
-    children,
-  }) => {
+  const postCountByMonth: Record<string, { posts: number; likes: number }> = {};
+
+  posts.forEach((item) => {
+    const date = new Date(item.timestamp);
+    const month = date.toLocaleString("default", { month: "short" });
+
+    if (!postCountByMonth[month]) {
+      postCountByMonth[month] = { posts: 0, likes: 0 };
+    }
+
+    postCountByMonth[month].posts += 1;
+    postCountByMonth[month].likes += item.likeCount;
+  });
+
+  const postData: PostData[] = Object.entries(postCountByMonth).map(
+    ([month, data]) => ({
+      month,
+      posts: data.posts,
+      likes: data.likes,
+    })
+  );
+
+  const totalPosts: number = postData.reduce(
+    (sum, item) => sum + item.posts,
+    0
+  );
+  const totalLikes: number = postData.reduce(
+    (sum, item) => sum + item.likes,
+    0
+  );
+  const avgLikesPerPost: number =
+    totalPosts > 0 ? Math.round(totalLikes / totalPosts) : 0;
+
+  const engagementData: EngagementData[] = postData.map((item) => ({
+    month: item.month,
+    engagement: item.posts > 0 ? Math.round(item.likes / item.posts) : 0,
+  }));
+
+  if (isLoading) {
+    return <Loading isLoading={isLoading} />;
+  }
+
+  if (error) {
     return (
-      <div className="rounded-xl shadow-md overflow-hidden bg-white">
-        <div className="p-4 border-b">
-          <h2 className="text-lg font-medium text-[#212121]">{title}</h2>
-          <p className="text-sm text-[#757575]">{description}</p>
-        </div>
-        <div className="p-6 bg-white">{children}</div>
+      <div className="flex items-center justify-center h-screen text-red-500">
+        Error: {error}
       </div>
     );
-  };
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-[#f5f5f5]">
@@ -128,12 +98,13 @@ export const AnalyticsDashboard: React.FC = () => {
           <h1 className="text-xl font-medium text-[#212121]">Пост Аналітика</h1>
         </header>
         <main className="flex flex-1 flex-col gap-6 p-6 md:gap-8 md:p-8">
-       
           <div className="grid gap-6 md:grid-cols-3">
             <StatCard
               title="Загальна кількість постів"
               value={totalPosts}
-              change={postData[postData.length - 1].posts}
+              change={
+                postData.length > 0 ? postData[postData.length - 1].posts : 0
+              }
               icon={<BarChart className="h-4 w-4 text-[#6200ee]" />}
               iconBgColor="bg-[#6200ee]/10"
               iconColor="text-[#6200ee]"
@@ -143,7 +114,9 @@ export const AnalyticsDashboard: React.FC = () => {
             <StatCard
               title="Загальна кількість лайків"
               value={totalLikes}
-              change={postData[postData.length - 1].likes}
+              change={
+                postData.length > 0 ? postData[postData.length - 1].likes : 0
+              }
               icon={<LineChart className="h-4 w-4 text-[#018786]" />}
               iconBgColor="bg-[#03dac6]/10"
               iconColor="text-[#018786]"
@@ -153,10 +126,14 @@ export const AnalyticsDashboard: React.FC = () => {
             <StatCard
               title="Середня кількість лайків на пост"
               value={avgLikesPerPost}
-              change={Math.round(
-                postData[postData.length - 1].likes /
-                  postData[postData.length - 1].posts
-              )}
+              change={
+                postData.length > 0 && postData[postData.length - 1].posts > 0
+                  ? Math.round(
+                      postData[postData.length - 1].likes /
+                        postData[postData.length - 1].posts
+                    )
+                  : 0
+              }
               icon={<PieChart className="h-4 w-4 text-[#7b1fa2]" />}
               iconBgColor="bg-[#bb86fc]/10"
               iconColor="text-[#7b1fa2]"
@@ -165,10 +142,9 @@ export const AnalyticsDashboard: React.FC = () => {
             />
           </div>
 
-          {/* Вкладки */}
           <div className="space-y-6">
             <div className="bg-white rounded-full h-12 p-1 shadow-sm flex">
-              {["overview", "posts", "likes", "engagement"].map((tab) => (
+              {mainTab.map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
@@ -182,8 +158,6 @@ export const AnalyticsDashboard: React.FC = () => {
                 </button>
               ))}
             </div>
-
-            {/* Вміст вкладок */}
             {activeTab === "overview" && (
               <TabContent
                 title="Загальна статистика"
@@ -226,7 +200,6 @@ export const AnalyticsDashboard: React.FC = () => {
                 </ResponsiveContainer>
               </TabContent>
             )}
-
             {activeTab === "posts" && (
               <TabContent
                 title="Кількість постів по місяцях"
@@ -252,7 +225,6 @@ export const AnalyticsDashboard: React.FC = () => {
                 </ResponsiveContainer>
               </TabContent>
             )}
-
             {activeTab === "likes" && (
               <TabContent
                 title="Кількість лайків по місяцях"
@@ -280,7 +252,6 @@ export const AnalyticsDashboard: React.FC = () => {
                 </ResponsiveContainer>
               </TabContent>
             )}
-
             {activeTab === "engagement" && (
               <TabContent
                 title="Залученість (лайки на пост)"
@@ -313,4 +284,45 @@ export const AnalyticsDashboard: React.FC = () => {
   );
 };
 
-export default AnalyticsDashboard;
+const StatCard: React.FC<CardProps> = ({
+  title,
+  value,
+  change,
+  icon,
+  iconBgColor,
+  headerBgColor,
+  titleColor,
+}) => {
+  return (
+    <div className="overflow-hidden rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 bg-white">
+      <div
+        className={`flex flex-row items-center justify-between space-y-0 p-4 ${headerBgColor}`}
+      >
+        <h3 className={`text-sm font-medium ${titleColor}`}>{title}</h3>
+        <div className={`rounded-full ${iconBgColor} p-2`}>{icon}</div>
+      </div>
+      <div className="p-6 pt-6">
+        <div className="text-3xl font-bold text-[#212121]">{value}</div>
+        <p className="text-xs text-[#757575] mt-1">
+          +{change} за останній місяць
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const TabContent: React.FC<TabContentProps> = ({
+  title,
+  description,
+  children,
+}) => {
+  return (
+    <div className="rounded-xl shadow-md overflow-hidden bg-white">
+      <div className="p-4 border-b">
+        <h2 className="text-lg font-medium text-[#212121]">{title}</h2>
+        <p className="text-sm text-[#757575]">{description}</p>
+      </div>
+      <div className="p-6 bg-white">{children}</div>
+    </div>
+  );
+};

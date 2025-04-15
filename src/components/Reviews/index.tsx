@@ -45,7 +45,7 @@ export const Reviews = () => {
   if (error) return <div>Помилка: {error}</div>;
   if (!data) return <div>Дані не знайдено</div>;
   return (
-    <Box className="w-full bg-white">
+    <Box className="w-full bg-white min-h-screen">
       <Box className="bg-purple-800 py-8 px-4">
         <Container maxWidth="lg">
           <Typography variant="h4" className="text-white font-bold">

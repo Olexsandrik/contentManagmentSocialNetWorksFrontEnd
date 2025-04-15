@@ -44,7 +44,7 @@ export function Settings() {
   const { toast, Snackbar } = useToast();
   const userId = useUserId();
   const { updateUser, isLoading, error } = useUpdateUser(userId);
-  const { currentUser, setCurrentUser } = useSidebar("server/current");
+  const { currentUser } = useSidebar("server/current");
   const [tabValue, setTabValue] = useState(0);
 
   const [settings, setSettings] = useState<UserSettings>({

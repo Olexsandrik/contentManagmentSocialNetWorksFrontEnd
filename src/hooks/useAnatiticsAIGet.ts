@@ -1,27 +1,18 @@
 import { useEffect, useState } from "react";
-import { User as mainUser } from "../app/type";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
+import { PromptAI } from "../app/type";
 
-type UserSettings = {
-  avatarUrl?: string | File | null;
-  avatarFile?: File | null | undefined;
-  name: string | null;
-  email: string | null;
-};
-export function useSidebar(mainUrl: string) {
-  const [currentUser, setCurrentUser] = useState<UserSettings | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+export const useAnalyticsAIGet = (mainUrl: string) => {
+  const [dataFromAI, setDataFromAI] = useState<PromptAI[]>([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        setIsLoading(true);
-
         const token = localStorage.getItem("token");
-
         if (!token) {
           navigate("/auth");
           return;
@@ -37,14 +28,20 @@ export function useSidebar(mainUrl: string) {
           throw new Error(`Помилка запиту: ${response.status}`);
         }
         const data = await response.json();
-
-        setCurrentUser(data);
+        setDataFromAI(
+          data.map((item: PromptAI) => ({
+            result: item.result,
+            customPrompt: item.customPrompt,
+          }))
+        );
       } catch (error: any) {
-        setError(error.message);
+        console.error(error);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
-    })();
-  }, [navigate, mainUrl]);
-  return { currentUser, isLoading, error };
-}
+    };
+    fetchData();
+  }, [mainUrl, navigate]);
+
+  return { dataFromAI };
+};
