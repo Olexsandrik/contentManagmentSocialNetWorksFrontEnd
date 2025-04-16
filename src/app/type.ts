@@ -89,7 +89,7 @@ export type TabContentProps = {
   children: React.ReactNode;
 };
 
-export type PromptAI = {
-  result: string;
-  customPrompt: string;
+export type messageData = {
+  role: "user" | "assistant";
+  content: string;
 };

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
-import { PromptAI } from "../app/type";
+import { messageData } from "../app/type";
+
 
 export const useAnalyticsAIGet = (mainUrl: string) => {
-  const [dataFromAI, setDataFromAI] = useState<PromptAI[]>([]);
+  const [dataFromAI, setDataFromAI] = useState<messageData[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -28,12 +29,14 @@ export const useAnalyticsAIGet = (mainUrl: string) => {
           throw new Error(`Помилка запиту: ${response.status}`);
         }
         const data = await response.json();
-        setDataFromAI(
-          data.map((item: PromptAI) => ({
-            result: item.result,
-            customPrompt: item.customPrompt,
-          }))
-        );
+        const formattedMessages = data.flatMap((item: any) => {
+          return [
+            { role: "user", content: item.customPrompt },
+            { role: "assistant", content: item.result },
+          ];
+        });
+
+        setDataFromAI(formattedMessages);
       } catch (error: any) {
         console.error(error);
       } finally {

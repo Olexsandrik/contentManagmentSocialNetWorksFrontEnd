@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
 import { useUserId } from "./useUserId";
+import { messageData } from "../app/type";
 
-export const useAnalyticsAI = (mainUrl: string, setMessages: Function) => {
+export const useAnalyticsAI = (mainUrl: string) => {
   const [customPrompt, setCustomPrompt] = useState("");
   const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState<messageData[]>([]);
   const userId = useUserId();
   const navigate = useNavigate();
 
@@ -35,8 +37,8 @@ export const useAnalyticsAI = (mainUrl: string, setMessages: Function) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          customPrompt,
           userId: userId,
+          customPrompt,
         }),
       });
 
@@ -45,11 +47,12 @@ export const useAnalyticsAI = (mainUrl: string, setMessages: Function) => {
       }
 
       const data = await res.json();
-
+      console.log(data);
       setMessages((prev: any) => [
         ...prev,
-        { role: "assistant", content: data.result },
+        { role: data.role, content: data.content },
       ]);
+      console.log(data);
     } catch (error) {
       console.error("Помилка при надсиланні промпта:", error);
     } finally {
@@ -63,5 +66,7 @@ export const useAnalyticsAI = (mainUrl: string, setMessages: Function) => {
     setCustomPrompt,
     loading,
     userId,
+    messages,
+    setMessages,
   };
 };

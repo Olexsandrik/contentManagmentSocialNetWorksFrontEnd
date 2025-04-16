@@ -9,36 +9,30 @@ import { BASE_URL } from "../../constants";
 import { useAnalyticsAI } from "../../hooks/useAnatylicsAI";
 import { useAnalyticsAIGet } from "../../hooks/useAnatiticsAIGet";
 
+import { useUserId } from "../../hooks/useUserId";
+import { messageData } from "../../app/type";
+
 export const AnalyticsAI = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const [messages, setMessages] = useState<
-    { role: "user" | "assistant"; content: string }[]
-  >([]);
-
   const { currentUser } = useSidebar("server/current");
+  const userId = useUserId();
 
-  const { handleSubmitAI, customPrompt, setCustomPrompt, loading, userId } =
-    useAnalyticsAI("server/advice", setMessages);
+  const {
+    handleSubmitAI,
+    customPrompt,
+    setCustomPrompt,
+    loading,
+    messages,
+    setMessages,
+  } = useAnalyticsAI("server/advice");
   const { dataFromAI } = useAnalyticsAIGet(`server/prompt/${userId}`);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomPrompt(e.target.value);
-  };
-
   useEffect(() => {
-    if (dataFromAI.length === 0) return;
-
-    const formattedMessages = dataFromAI.flatMap((item) => [
-      { role: "user" as const, content: item.customPrompt },
-      { role: "assistant" as const, content: item.result },
-    ]);
-
-    setMessages(formattedMessages);
+    setMessages([...messages, ...dataFromAI]);
   }, [dataFromAI]);
 
   return (
@@ -171,7 +165,7 @@ export const AnalyticsAI = () => {
               variant="standard"
               placeholder="Напишіть повідомлення..."
               value={customPrompt}
-              onChange={handleInputChange}
+              onChange={(e) => setCustomPrompt(e.target.value)}
               InputProps={{
                 disableUnderline: true,
                 className: "py-3 px-4",
