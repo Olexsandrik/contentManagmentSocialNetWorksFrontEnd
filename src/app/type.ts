@@ -123,5 +123,5 @@ export type InputProps = {
 export type AddReview = {
   typeOfReviews: string;
   topic: string;
-  reviews: string;
+  messages: string;
 };
