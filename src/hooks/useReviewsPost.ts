@@ -1,12 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
+import { AddReview } from "../app/type";
 
-type AddReview = {
-  typeOfReviews: string;
-  topic: string;
-  messages: string;
-};
 
 export function useReviewsPost(mainUrl: string | null | undefined) {
   const [reviews, setReviews] = useState<AddReview | null>(null);

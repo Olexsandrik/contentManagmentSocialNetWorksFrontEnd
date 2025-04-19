@@ -1,20 +1,25 @@
 import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import { Input } from "../Input/index";
+import { Input } from "../Input";
 import { FacebookAuth } from "../FacebookAuth";
 import { useAuth } from "../../hooks/useAuth";
-import { Login as LoginType } from "../../app/type";
+// import { Login as LoginType } from "../../app/type";
+import { GetLoginShema, getLoginShemaMain } from "./zodValidations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSidebar } from "../../hooks/useSidebarGet";
+import { User } from "../../app/type";
+
 type Props = {
   setSelected: (value: string) => void;
 };
 
 export const Login = ({ setSelected }: Props) => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<LoginType>({
+  const { currentUser } = useSidebar("server/current");
+  const schema = getLoginShemaMain(currentUser);
+
+  const { handleSubmit, control } = useForm<GetLoginShema>({
     mode: "onChange",
+    resolver: zodResolver(schema),
     reValidateMode: "onBlur",
     defaultValues: {
       email: "",
@@ -22,8 +27,8 @@ export const Login = ({ setSelected }: Props) => {
     },
   });
 
-  const { onSubmit, isLoading, errorMessage } = useAuth("server/login");
-
+  const { onSubmit, isLoading } = useAuth("server/login");
+  
   return (
     <form
       className="space-y-6 w-[700px] h-[600px] p-32 mx-auto rounded-lg"
@@ -36,8 +41,7 @@ export const Login = ({ setSelected }: Props) => {
         type="email"
         className="w-full p-3 rounded-md"
         required="Поле є обов’язковим"
-      />
-
+      />{" "}
       <Input
         control={control}
         name="password"
@@ -46,9 +50,6 @@ export const Login = ({ setSelected }: Props) => {
         className="w-full p-3 rounded-md"
         required="Поле є обов’язковим"
       />
-
-      {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
-
       <p className="text-center text-sm">
         Немає акаунта?{" "}
         <Link
@@ -59,7 +60,6 @@ export const Login = ({ setSelected }: Props) => {
           Зареєструйтесь
         </Link>
       </p>
-
       <div className="flex gap-2 justify-end">
         <Button
           fullWidth

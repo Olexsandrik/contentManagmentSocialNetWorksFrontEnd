@@ -7,9 +7,10 @@ import {
   HeartIcon,
   ChatBubbleOvalLeftIcon,
 } from "@heroicons/react/24/outline";
-import { SocialMediaComment, SocialMediaPost } from "../../app/type";
+import {SocialMediaPost } from "../../app/type";
 import { usePostGet } from "../../hooks/usePostGet";
 import { Loading } from "../Loading";
+import { BASE_URL } from "../../constants";
 
 export const Post = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -21,25 +22,17 @@ export const Post = () => {
     "server/instagram-data"
   );
 
-  const sampleComments: (SocialMediaComment[] | undefined)[] = posts.map(
-    (post) => post.comments
-  );
-
   useEffect(() => {
-    const postsWithComments = posts.map((post) => ({
-      ...post,
-      comments: sampleComments[parseInt(post.id)] || [],
-    }));
-
-    const sortedPosts = sortPosts(postsWithComments, sortOrder);
+    const sortedPosts = sortPosts(posts, sortOrder);
     setPosts(sortedPosts);
   }, [sortOrder]);
 
-  const sortPosts = (postsToSort: SocialMediaPost[], order: "asc" | "desc") => {
-    return [...postsToSort].sort((a, b) => {
-      const dateA = new Date(a.timestamp).getTime();
-      const dateB = new Date(b.timestamp).getTime();
-      return order === "asc" ? dateA - dateB : dateB - dateA;
+  const sortPosts = (posts: SocialMediaPost[], sortOrder: string) => {
+    return [...posts].sort((a, b) => {
+      const mainA = new Date(a.timestamp).getTime();
+      const mainB = new Date(b.timestamp).getTime();
+
+      return sortOrder === "desc" ? mainA - mainB : mainB - mainA;
     });
   };
 
@@ -62,6 +55,8 @@ export const Post = () => {
   if (isLoading) {
     return <Loading isLoading={isLoading} />;
   }
+
+  console.log(posts);
 
   if (error) {
     return (
@@ -86,11 +81,11 @@ export const Post = () => {
           </button>
         </div>
 
-        <div className="grid md:grid-cols-4">
+        <div className="grid md:grid-cols-3 ">
           {posts.map((post) => (
             <div
               key={post.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden w-96"
+              className="bg-white rounded-xl object-fill shadow-md overflow-hidden w-96 mb-12"
             >
               <div className="p-4 flex items-center space-x-3 border-b">
                 <div className="h-10 w-10 rounded-full bg-gradient-to-r from-pink-500 to-orange-400 flex items-center justify-center">
@@ -105,11 +100,19 @@ export const Post = () => {
                 </div>
               </div>
 
-              <img
-                src={post.mediaUrl}
-                alt={post.caption || "Instagram post"}
-                className="w-96 object-cover rounded mb-2"
-              />
+              {post.mediaType === "IMAGE" ? (
+                <img
+                  src={post.mediaUrl}
+                  alt={post.caption || "Instagram post"}
+                  className="w-96 h-96 object-contain rounded mb-2"
+                />
+              ) : (
+                <video
+                  src={`${BASE_URL}${post.mediaUrl}`}
+                  controls
+                  className="w-96 h-96 object-cover rounded mb-2"
+                />
+              )}
 
               {post.caption && (
                 <div className="p-4 border-b">

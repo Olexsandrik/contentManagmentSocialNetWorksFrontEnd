@@ -3,18 +3,24 @@ import { useForm } from "react-hook-form";
 import { Input } from "../Input";
 import { useAuth } from "../../hooks/useAuth";
 import { Register as AuthRegister } from "../../app/type";
-
+import { RegisterShema, registerShema } from "./zodValidations";
+import { useSidebar } from "../../hooks/useSidebarGet";
+import { zodResolver } from "@hookform/resolvers/zod";
 type Props = {
   setSelected: (value: string) => void;
 };
 
 export const Register = ({ setSelected }: Props) => {
+  const { currentUser } = useSidebar("server/current");
+  const shema = registerShema(currentUser);
+
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<AuthRegister>({
+  } = useForm<RegisterShema>({
     mode: "onChange",
+    resolver: zodResolver(shema),
     reValidateMode: "onBlur",
     defaultValues: {
       email: "",

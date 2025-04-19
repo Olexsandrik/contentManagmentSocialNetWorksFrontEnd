@@ -67,6 +67,7 @@ export const AnalyticsDashboard = () => {
     (sum, item) => sum + item.posts,
     0
   );
+
   const totalLikes: number = postData.reduce(
     (sum, item) => sum + item.likes,
     0

@@ -10,7 +10,6 @@ import { useAnalyticsAI } from "../../hooks/useAnatylicsAI";
 import { useAnalyticsAIGet } from "../../hooks/useAnatiticsAIGet";
 
 import { useUserId } from "../../hooks/useUserId";
-import { messageData } from "../../app/type";
 
 export const AnalyticsAI = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -36,7 +35,7 @@ export const AnalyticsAI = () => {
   }, [dataFromAI]);
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-50 to-white overflow-x-auto">
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
@@ -71,7 +70,7 @@ export const AnalyticsAI = () => {
                   transition={{ duration: 0.5 }}
                   className="text-center p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-white shadow-lg border border-gray-100 max-w-md"
                 >
-                  <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 rounded-full inline-flex mb-4 ">
+                  <div className="bg-gradient-to-r  from-purple-600 to-indigo-600 p-4 rounded-full inline-flex mb-4 ">
                     <Share2 />
                   </div>
                 </motion.div>
@@ -86,10 +85,10 @@ export const AnalyticsAI = () => {
                     transition={{ duration: 0.3 }}
                   >
                     <div
-                      className={`flex max-w-[85%] items-start gap-3 ${
+                      className={`flex max-w-[85%] items-start gap-3  ${
                         message.role === "user"
                           ? "flex-row-reverse"
-                          : "flex-row"
+                          : "flex-row overflow-x-hidden"
                       }`}
                     >
                       <Avatar className="w-10 h-10 border border-gray-300 bg-indigo-100 text-indigo-600">
@@ -107,10 +106,10 @@ export const AnalyticsAI = () => {
                       </Avatar>
 
                       <div
-                        className={`p-4 rounded-2xl shadow-sm ${
+                        className={`p-4 rounded-2xl shadow-sm  ${
                           message.role === "user"
                             ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
-                            : "bg-white border border-gray-100 text-gray-800"
+                            : "bg-white border border-gray-100 text-gray-800 max-w-[700px]"
                         }`}
                       >
                         <Typography

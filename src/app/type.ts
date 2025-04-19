@@ -1,3 +1,7 @@
+import { DebouncedFunc } from "lodash";
+import { ChangeEventHandler } from "react";
+import { Control } from "react-hook-form";
+
 // social
 export type User = {
   id: number;
@@ -27,7 +31,7 @@ export type Review = {
 export type SocialMediaPost = {
   id: string;
   caption?: string;
-  media_type: string;
+  mediaType: string;
   mediaUrl: string;
   permalink: string;
   timestamp: string;
@@ -92,4 +96,32 @@ export type TabContentProps = {
 export type messageData = {
   role: "user" | "assistant";
   content: string;
+};
+
+export type UserSettings = {
+  avatarUrl?: string | File | null;
+  avatarFile?: File | null | undefined;
+  name?: string | null;
+  email?: string | null;
+  provider?: "facebook" | "ticktock";
+};
+
+export type InputProps = {
+  name: string;
+  label?: string;
+  placeholder?: string;
+  type?: string;
+  control?: Control<any>;
+  required?: string;
+  endContent?: React.JSX.Element;
+  className?: string;
+  value?: string;
+  textFields?: Boolean;
+  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+};
+
+export type AddReview = {
+  typeOfReviews: string;
+  topic: string;
+  reviews: string;
 };
