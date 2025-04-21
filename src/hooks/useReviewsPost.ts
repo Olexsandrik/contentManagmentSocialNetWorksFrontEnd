@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
 import { AddReview } from "../app/type";
 
-
-export function useReviewsPost(mainUrl: string | null | undefined) {
+export const useReviewsPost = (mainUrl: string | null) => {
   const [reviews, setReviews] = useState<AddReview | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,4 +48,4 @@ export function useReviewsPost(mainUrl: string | null | undefined) {
   };
 
   return { submitReview, reviews, isLoading, error, setReviews };
-}
+};

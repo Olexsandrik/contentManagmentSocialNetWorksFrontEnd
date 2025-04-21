@@ -1,77 +1,156 @@
-import { Card, CardBody } from "@nextui-org/react";
+import { CardContent, Typography } from "@mui/material";
+import { CheckCircle, Pending, FormatListBulleted } from "@mui/icons-material";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
+import { Text } from "lucide-react";
+
+interface Task {
+  id: number;
+  title: string;
+  priority: "High" | "Medium" | "Normal" | "Low";
+  team: string[];
+  createdAt: string;
+  type: "blue" | "orange" | "green";
+}
 
 export const Dashboard = () => {
+  const cardsBaseInfo = [
+    {
+      title: "TOTAL TASK",
+      count: 10,
+      createdAt: "last month",
+      icon: <Pending sx={{ fontSize: 40 }} />,
+    },
+    {
+      title: "COMPLITED TASKS",
+      count: 4,
+      createdAt: "last month",
+      icon: <CheckCircle sx={{ fontSize: 40 }} />,
+    },
+    {
+      title: "TASK IN PROGRESS",
+      count: 10,
+      createdAt: "last month",
+      icon: <FormatListBulleted sx={{ fontSize: 40 }} />,
+    },
+  ];
+
+  const tasks = [
+    { title: "Task 1", status: "done", createdAt: "last month" },
+    { title: "Task 2", status: "in_progress", createdAt: "last month" },
+    { title: "Task 3", status: "done", createdAt: "last month" },
+    { title: "Task 4", status: "done", createdAt: "last month" },
+    { title: "Task 5", status: "done", createdAt: "last month" },
+    { title: "Task 6", status: "done", createdAt: "last month" },
+    { title: "Task 7", status: "done", createdAt: "last month" },
+    { title: "Task 8", status: "in_progress", createdAt: "last month" },
+    { title: "Task 9", status: "in_progress", createdAt: "last month" },
+    { title: "Task 10", status: "in_progress", createdAt: "last month" },
+  ];
+
+  const totalTask = tasks.length;
+  const totalDone = tasks.filter((done) => done.status === "done").length;
+  const totalInProgress = tasks.filter(
+    (process) => process.status === "in_progress"
+  ).length;
+  const data = [
+    { name: "Зроблені", value: totalDone },
+    { name: "В процесі", value: totalInProgress },
+    { name: "Всього", value: totalTask },
+  ];
+
+  const COLORS = ["#4caf50", "#ff9800", "#2196f3"];
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Cool Dashboard</h1>
+    <div className="p-10 bg-gray-50 min-h-screen">
+      <div className="flex justify-between">
+        {cardsBaseInfo.map((item) => {
+          return (
+            <CardContent
+              sx={{
+                width: 350,
+                height: "auto",
+                borderRadius: 20,
+                display: "flex",
+                alignItems: "center",
+                backgroundColor: "#ffffff",
+              }}
+            >
+              <div className="ml-12 mr-28">
+                <Typography
+                  sx={{
+                    fontSize: 16,
+                    color: "#888888",
+                  }}
+                >
+                  {item.title}
+                </Typography>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardBody>
-            <div className="flex flex-col">
-              <p className="text-sm text-gray-500">Total Users</p>
-              <p className="text-2xl font-semibold mt-2">1,234</p>
-            </div>
-          </CardBody>
-        </Card>
+                <Typography
+                  sx={{
+                    fontSize: 20,
+                    color: "#111827",
+                  }}
+                >
+                  {item.count}
+                </Typography>
+                <Typography sx={{ color: "#9CA3AF", fontSize: 10 }}>
+                  {item.createdAt}
+                </Typography>
+              </div>
 
-        <Card>
-          <CardBody>
-            <div className="flex flex-col">
-              <p className="text-sm text-gray-500">Total Revenue</p>
-              <p className="text-2xl font-semibold mt-2">$12,345</p>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardBody>
-            <div className="flex flex-col">
-              <p className="text-sm text-gray-500">Active Projects</p>
-              <p className="text-2xl font-semibold mt-2">12</p>
-            </div>
-          </CardBody>
-        </Card>
+              <div style={{ color: "#3B82F6" }}>{item.icon}</div>
+            </CardContent>
+          );
+        })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <Card>
-          <CardBody>
-            <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-            <div className="space-y-4">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="flex items-center gap-4">
-                  <div className="w-2 h-2 rounded-full bg-blue-500" />
-                  <div>
-                    <p className="text-sm">New user registered</p>
-                    <p className="text-xs text-gray-500">2 minutes ago</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardBody>
-        </Card>
+      <div className="mt-10 flex items-center justify-center">
+        <BarChart width={1500} height={700} data={data}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="value" fill="#82ca9d">
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </div>
 
-        <Card>
-          <CardBody>
-            <h3 className="text-lg font-semibold mb-4">Quick Stats</h3>
-            <div className="space-y-4">
-              {[
-                { label: "Completed Tasks", value: "24/36" },
-                { label: "Open Tickets", value: "5" },
-                { label: "Team Members", value: "12" },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="flex justify-between items-center"
-                >
-                  <p className="text-sm text-gray-500">{item.label}</p>
-                  <p className="text-sm font-medium">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </CardBody>
-        </Card>
+      <div className="m-auto rounded-lg p-4 shadow-lg">
+        <div className="max-w-screen-xl m-auto">
+          <div className="flex justify-between border-b-2 mb-2 font-semibold text-gray-700">
+            <Typography sx={{ fontSize: 16, width: 200 }}>Title</Typography>
+            <Typography sx={{ fontSize: 16 }}>Priority</Typography>
+            <Typography sx={{ fontSize: 16 }}>Created At</Typography>
+          </div>
+
+          <div className="space-y-2">
+            {tasks.map((task, index) => (
+              <div
+                key={index}
+                className="flex justify-between text-sm text-gray-800 border-b-1"
+              >
+                <Typography>{task.title}</Typography>
+                <Typography>{task.status}</Typography>
+                <Typography>{task.createdAt}</Typography>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

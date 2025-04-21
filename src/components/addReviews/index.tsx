@@ -5,17 +5,16 @@ import {
   CardContent,
   CardHeader,
   Button,
-  Select,
   MenuItem,
   FormControl,
   InputLabel,
-  SelectChangeEvent,
 } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { reviewsSecttings, ReviewsSettings } from "../Auth/zodValidations";
 import { Input } from "../Input";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useReviewsPost } from "../../hooks/useReviewsPost";
+import { Select } from "../Select";
 
 export const AddReviews = ({ tabValue, toast }: any) => {
   const {
@@ -30,33 +29,17 @@ export const AddReviews = ({ tabValue, toast }: any) => {
     defaultValues: {
       topics: "",
       reviews: "",
+      typeOfReviews: "",
     },
   });
-  const [reviewData, setReviewData] = useState({
-    typeOfReviews: "",
-    topic: "",
-    reviews: "",
-    createdAt: new Date(),
-  });
+
   const { submitReview } = useReviewsPost("server/reviews");
-  const handleReviewChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { id, value } = e.target;
-      setReviewData((prev) => ({ ...prev, [id]: value }));
-    },
-    []
-  );
-
-  const reviewRef = useRef(reviewData);
-
-  useEffect(() => {
-    reviewRef.current = reviewData;
-  }, [reviewData]);
 
   const onSubmit = async (data: ReviewsSettings) => {
     if (errors.reviews || errors.topics) return;
+
     const reviewToSend = {
-      typeOfReviews: reviewData.typeOfReviews,
+      typeOfReviews: data.typeOfReviews,
       topic: data.topics,
       reviews: data.reviews,
       createdAt: new Date(),
@@ -73,9 +56,6 @@ export const AddReviews = ({ tabValue, toast }: any) => {
     reset();
   };
 
-  const handleTypeChange = useCallback((e: SelectChangeEvent) => {
-    setReviewData((prev) => ({ ...prev, typeOfReviews: e.target.value }));
-  }, []);
   return (
     <TabPanel value={tabValue} index={2}>
       <Card>
@@ -86,17 +66,16 @@ export const AddReviews = ({ tabValue, toast }: any) => {
               <FormControl fullWidth>
                 <InputLabel id="feedback-type-label">Тип відгуку</InputLabel>
                 <Select
-                  labelId="feedback-type-label"
-                  id="typeOfReviews"
-                  value={reviewData.typeOfReviews}
-                  label="Тип відгуку"
-                  onChange={handleTypeChange}
-                >
-                  <MenuItem value="suggestion">Пропозиція</MenuItem>
-                  <MenuItem value="bug">Повідомлення про помилку</MenuItem>
-                  <MenuItem value="praise">Подяка</MenuItem>
-                  <MenuItem value="other">Інше</MenuItem>
-                </Select>
+                  name="typeOfReviews"
+                  control={control}
+                  options={[
+                    { value: "suggestion", label: "Пропозиція" },
+                    { value: "bug", label: "Повідомлення про помилку" },
+                    { value: "praise", label: "Подяка" },
+                    { value: "other", label: "Інше" },
+                  ]}
+                  placeholder="Оберіть тип відгуку"
+                />
               </FormControl>
 
               <Input
@@ -105,7 +84,6 @@ export const AddReviews = ({ tabValue, toast }: any) => {
                 label="Тема"
                 placeholder="Коротко опишіть ваш відгукʼ..."
                 className="w-full"
-                onChange={handleReviewChange}
               />
               <Input
                 control={control}
@@ -114,7 +92,6 @@ export const AddReviews = ({ tabValue, toast }: any) => {
                 placeholder="Детально опишіть ваш відгук..."
                 textFields
                 className="w-full"
-                onChange={handleReviewChange}
               />
 
               <Button type="submit" variant="contained" color="primary">

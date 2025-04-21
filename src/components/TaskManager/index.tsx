@@ -1,98 +1,136 @@
+import type React from "react";
 import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
-import { Button, Input, Checkbox, Card, CardContent } from "@mui/material";
-import { useSidebar } from "../../hooks/useSidebarGet";
+import {
+  Button,
+  Typography,
+  IconButton,
+  Avatar,
+  AvatarGroup,
+  Chip,
+  Menu,
+  MenuItem,
+  Tabs,
+  Tab,
+  Badge,
+  CardContent,
+  TextField,
+} from "@mui/material";
+import {
+  Add as AddIcon,
+  MoreHoriz as MoreHorizIcon,
+  ArrowUpward as ArrowUpwardIcon,
+  ViewKanban as ViewKanbanIcon,
+  ViewList as ViewListIcon,
+  CheckCircle as CheckCircleIcon,
+  RadioButtonUnchecked as RadioButtonUncheckedIcon,
+  Comment as CommentIcon,
+  AttachFile as AttachFileIcon,
+  ChecklistRtl as ChecklistRtlIcon,
+} from "@mui/icons-material";
+import { Card } from "@nextui-org/react";
+import { MainModal } from "../../Modal";
+import { Input } from "../Input";
 
-interface Todo {
-  id: number;
-  content: string;
-  completed: boolean;
-}
+type User = {
+  id: string;
+  name: string;
+  initials: string;
+  color: string;
+};
 
-export default function TaskManager() {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState("");
+type TaskTag = {
+  name: string;
+  color: string;
+};
 
-  const {} = useSidebar("api/");
-  const addTodo = () => {
-    if (newTodo.trim() === "") return;
-
-    const todo: Todo = {
-      id: Date.now(),
-      content: newTodo,
-      completed: false,
-    };
-
-    setTodos([...todos, todo]);
-    setNewTodo("");
+type Task = {
+  id: string;
+  title: string;
+  priority: "HIGH" | "MEDIUM" | "NORMAL" | "LOW";
+  status: "TO_DO" | "IN_PROGRESS" | "COMPLETED";
+  date: string;
+  assignees: User[];
+  comments: number;
+  attachments: number;
+  subtasks: {
+    total: number;
+    completed: number;
   };
+  description?: string;
+  tags: TaskTag[];
+};
 
-  const toggleTodo = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
+const users: User[] = [
+  { id: "ai", name: "Alex Ivanov", initials: "AI", color: "#3b82f6" },
+  { id: "js", name: "Jane Smith", initials: "JS", color: "#ef4444" },
+  { id: "ca", name: "Codewave Asante", initials: "CA", color: "#8b5cf6" },
+  { id: "ew", name: "Emily Wilson", initials: "EW", color: "#f97316" },
+  { id: "jd", name: "John Doe", initials: "JD", color: "#10b981" },
+];
 
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
+const tags: TaskTag[] = [
+  { name: "tutorial", color: "#3b82f6" },
+  { name: "Website App", color: "#3b82f6" },
+  { name: "Design", color: "#8b5cf6" },
+  { name: "Bug Fixing", color: "#3b82f6" },
+];
 
+const taskType = [
+  { color: "blue", title: "To do" },
+  { color: "yellow", title: "In Progress" },
+  { color: "green", title: "Completed" },
+];
+export const TaskManager = () => {
+  const [modal, setModal] = useState(false);
   return (
-    <div className="space-y-4">
-      <div className="flex space-x-2 ">
-        <div className="m-auto min-w-10">
-          {" "}
-          <Input
-            placeholder="Add a new task..."
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-          />
-          <Button onClick={addTodo}>
-            <Plus className="h-4 w-4 mr-2" />
-            Add
-          </Button>
-        </div>
-      </div>
-
-      {todos.length === 0 ? (
-        <Card>
-          <CardContent className="p-4 text-center text-muted-foreground">
-            No tasks yet. Add one above!
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {todos.map((todo) => (
-            <Card key={todo.id} className="rounded-xl">
-              <CardContent className="p-0">
-                <div className="flex items-center justify-between p-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      checked={todo.completed}
-                      onChange={() => toggleTodo(todo.id)}
-                      id={`todo-${todo.id}`}
-                    />
-                    <label
-                      htmlFor={`todo-${todo.id}`}
-                      className={`text-sm ${todo.completed ? "line-through text-muted-foreground" : ""}`}
-                    >
-                      {todo.content}
-                    </label>
-                  </div>
-                  <div>
-                    <Button onClick={() => deleteTodo(todo.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                    <Button> edit</Button>
-                  </div>
-                </div>
+    <div className="p-10 bg-gray-50 min-h-screen">
+      <div className="flex justify-around">
+        {taskType.map((item) => {
+          return (
+            <Card className="w-80">
+              <CardContent className="flex justify-center content-center">
+                <Typography
+                  sx={{
+                    backgroundColor: item.color,
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    marginRight: 2,
+                  }}
+                />
+                <Typography>{item.title}</Typography>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      )}
+          );
+        })}
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#1976d2",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "12px",
+            textTransform: "none",
+            boxShadow: 3,
+            "&:hover": {
+              backgroundColor: "#1565c0",
+            },
+          }}
+          onClick={() => setModal(true)}
+        >
+          Add task
+        </Button>
+        <MainModal
+          open={modal}
+          className="absolute top-40 left-0 right-0 bg-white flex justify-center content-center"
+          handleClose={() => setModal(false)}
+        >
+          <div className="min-w-[600px] min-h-[600px] bg-white p-4">
+            ADD TASK
+            <input className="w-full mt-2 p-2 border rounded" />
+          </div>
+        </MainModal>
+      </div>
     </div>
   );
-}
+};

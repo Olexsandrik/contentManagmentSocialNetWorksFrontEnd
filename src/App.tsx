@@ -8,12 +8,11 @@ import { Dashboard } from "./components/Dashboard";
 import { AnalyticsDashboard } from "./components/Analytics";
 
 import FacebookRedirectHandler from "./components/FacebookRedirectHandler";
-import TaskManager from "./components/TaskManager";
+import { TaskManager } from "./components/TaskManager";
 import { Settings } from "./components/Settings";
 import { Reviews } from "./components/Reviews";
 import { Post } from "./components/Post";
 import { AnalyticsAI } from "./components/AnalyticsAI";
-
 
 const App = () => {
   return (
