@@ -5,14 +5,13 @@ import {
   CardContent,
   CardHeader,
   Button,
-  MenuItem,
   FormControl,
   InputLabel,
 } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { reviewsSecttings, ReviewsSettings } from "../Auth/zodValidations";
 import { Input } from "../Input";
-import { useCallback, useEffect, useRef, useState } from "react";
+
 import { useReviewsPost } from "../../hooks/useReviewsPost";
 import { Select } from "../Select";
 
