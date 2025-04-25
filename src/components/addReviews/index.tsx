@@ -9,7 +9,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { reviewsSecttings, ReviewsSettings } from "../Auth/zodValidations";
+import { reviewsSettings, ReviewsSettings } from "../Auth/zodValidations";
 import { Input } from "../Input";
 
 import { useReviewsPost } from "../../hooks/useReviewsPost";
@@ -23,11 +23,11 @@ export const AddReviews = ({ tabValue, toast }: any) => {
     formState: { errors },
   } = useForm<ReviewsSettings>({
     mode: "onChange",
-    resolver: zodResolver(reviewsSecttings),
+    resolver: zodResolver(reviewsSettings),
     reValidateMode: "onBlur",
     defaultValues: {
-      topics: "",
-      reviews: "",
+      topic: "",
+      messages: "",
       typeOfReviews: "",
     },
   });
@@ -35,24 +35,21 @@ export const AddReviews = ({ tabValue, toast }: any) => {
   const { submitReview } = useReviewsPost("server/reviews");
 
   const onSubmit = async (data: ReviewsSettings) => {
-    if (errors.reviews || errors.topics) return;
-
     const reviewToSend = {
       typeOfReviews: data.typeOfReviews,
-      topic: data.topics,
-      reviews: data.reviews,
+      topic: data.topic,
+      messages: data.messages,
       createdAt: new Date(),
     };
 
     await submitReview(reviewToSend);
-
-    toast({
-      title: "Дякуємо за ваш відгук!",
-      description:
-        "Ми цінуємо вашу думку і використаємо її для покращення нашого сервісу.",
-    });
-
     reset();
+
+    // toast({
+    //   title: "Дякуємо за ваш відгук!",
+    //   description:
+    //     "Ми цінуємо вашу думку і використаємо її для покращення нашого сервісу.",
+    // });
   };
 
   return (
@@ -63,7 +60,6 @@ export const AddReviews = ({ tabValue, toast }: any) => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-4">
               <FormControl fullWidth>
-                <InputLabel id="feedback-type-label">Тип відгуку</InputLabel>
                 <Select
                   name="typeOfReviews"
                   control={control}
@@ -79,14 +75,14 @@ export const AddReviews = ({ tabValue, toast }: any) => {
 
               <Input
                 control={control}
-                name="topics"
+                name="topic"
                 label="Тема"
-                placeholder="Коротко опишіть ваш відгукʼ..."
+                placeholder="Коротко опишіть ваш відгук..."
                 className="w-full"
               />
               <Input
                 control={control}
-                name="reviews"
+                name="messages"
                 label="Повідомлення"
                 placeholder="Детально опишіть ваш відгук..."
                 textFields

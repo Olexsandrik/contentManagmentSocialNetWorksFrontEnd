@@ -21,6 +21,8 @@ export const useReviewsPost = (mainUrl: string | null) => {
       setIsLoading(true);
       setError(null);
 
+      console.log(userData);
+
       const response = await fetch(`${BASE_URL}/${mainUrl}`, {
         method: "POST",
         headers: {

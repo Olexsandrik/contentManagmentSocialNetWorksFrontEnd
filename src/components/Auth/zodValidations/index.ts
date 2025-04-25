@@ -60,16 +60,16 @@ export const changeProfile = z.object({
     }),
 });
 
-export const reviewsSecttings = z.object({
-  topics: z
+export const reviewsSettings = z.object({
+  topic: z
     .string()
     .max(15, { message: "so long for this" })
     .regex(/^[a-zA-Z]/, { message: "not correct" }),
-  reviews: z.string().max(500, { message: "message so long" }),
+  messages: z.string().max(500, { message: "message so long" }),
   typeOfReviews: z.string().min(1, { message: "take type of reviews" }),
 });
 
 export type GetLoginShema = z.infer<ReturnType<typeof getLoginShemaMain>>;
 export type RegisterShema = z.infer<ReturnType<typeof registerShema>>;
 export type ChangeProfile = z.infer<typeof changeProfile>;
-export type ReviewsSettings = z.infer<typeof reviewsSecttings>;
+export type ReviewsSettings = z.infer<typeof reviewsSettings>;

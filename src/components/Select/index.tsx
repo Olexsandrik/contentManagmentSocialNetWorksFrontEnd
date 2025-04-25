@@ -24,10 +24,8 @@ export const Select = ({
 
   return (
     <FormControl fullWidth error={!!error}>
-      <InputLabel id={`${name}-label`}>{placeholder}</InputLabel>
+      <InputLabel>{placeholder}</InputLabel>
       <MuiSelect id={name} {...field}>
-        <MenuItem disabled>{placeholder}</MenuItem>
-
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
