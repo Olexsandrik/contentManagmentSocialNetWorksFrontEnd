@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FormControl,
   InputLabel,
@@ -6,20 +5,12 @@ import {
   MenuItem,
   FormHelperText,
 } from "@mui/material";
-import { useController, Control } from "react-hook-form";
-
-type SelectProps = {
-  name: string;
-  control: Control<any>;
-
-  options: { value: string; label: string }[];
-  placeholder: string;
-};
+import { useController } from "react-hook-form";
+import { SelectProps } from "../../app/type";
 
 export const Select = ({
   name,
   control,
-
   options,
   placeholder,
 }: SelectProps) => {

@@ -126,3 +126,32 @@ export type AddReview = {
   reviews: string;
   createdAt?: Date;
 };
+export type SelectProps = {
+  name: string;
+  control: Control<any>;
+
+  options: { value: string; label: string }[];
+  placeholder: string;
+};
+
+//tasks
+export type taskType = {
+  title: string;
+  color: string;
+};
+export type Task = {
+  id: string;
+  userId: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  priority: {
+    color: string;
+    title: "HIGH PRIORITY" | "IN PROGRESS" | "COMPLETED";
+  };
+};
+
+export type PriorityTaskProps = {
+  type: taskType;
+};
+//tasks
