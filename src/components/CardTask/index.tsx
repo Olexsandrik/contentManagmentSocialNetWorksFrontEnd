@@ -12,6 +12,7 @@ import { CardTaskProps, Task } from "../../app/type";
 import { MoreHorizontalIcon, MoreVerticalIcon } from "lucide-react";
 import { EditTask } from "../EditTask";
 import { Select } from "../Select";
+import { taskType as TypeTasks } from "../../app/type";
 //CardTaskProps
 export const CardTask = ({
   item,
@@ -19,6 +20,7 @@ export const CardTask = ({
   SelectOption,
   setDataTask,
   dataTask,
+  taskType,
 }: any) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -33,6 +35,9 @@ export const CardTask = ({
               priority: {
                 ...t.priority,
                 title: newTitle,
+                color: taskType.find((item: TypeTasks) => {
+                  return item.title === newTitle;
+                }).color,
               },
             }
           : t;

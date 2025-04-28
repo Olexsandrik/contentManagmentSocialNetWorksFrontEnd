@@ -140,6 +140,7 @@ export const TaskManager = () => {
                     SelectOption={SelectOption}
                     setDataTask={setDataTask}
                     dataTask={dataTask}
+                    taskType={taskType}
                   />
                 );
               })}
