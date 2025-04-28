@@ -1,17 +1,73 @@
-import { CardContent, Typography } from "@mui/material";
+import {
+  CardContent,
+  IconButton,
+  Menu,
+  MenuItem,
+  SelectChangeEvent,
+  Typography,
+} from "@mui/material";
 import { Button, Card } from "@nextui-org/react";
 import React, { useState } from "react";
-import { Task } from "../../app/type";
+import { CardTaskProps, Task } from "../../app/type";
+import { MoreHorizontalIcon, MoreVerticalIcon } from "lucide-react";
+import { EditTask } from "../EditTask";
+import { Select } from "../Select";
+//CardTaskProps
+export const CardTask = ({
+  item,
+  control,
+  SelectOption,
+  setDataTask,
+  dataTask,
+}: any) => {
+  const [edit, setEdit] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-type CardTaskProps = {
-  item: Task;
-};
+  const handleChangeType = (e: SelectChangeEvent) => {
+    const newTitle = e.target.value as string;
+    setDataTask((prev: Task[]) => {
+      return prev.map((t) => {
+        return t.id === item.id
+          ? {
+              ...t,
+              priority: {
+                ...t.priority,
+                title: newTitle,
+              },
+            }
+          : t;
+      });
+    });
+  };
 
-export const CardTask = ({ item }: CardTaskProps) => {
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleEdit = () => {
+    console.log("Редагувати", item);
+    setEdit(true);
+    handleMenuClose();
+  };
+
+  const handleDelete = () => {
+    console.log("Видалити", item);
+    handleMenuClose();
+  };
+
+  const handleAddDesc = () => {
+    console.log("Додати опис", item);
+    handleMenuClose();
+  };
+
   return (
     <Card
       key={item.id}
-      className="mb-3 p-4 mt-10 h-52 flex flex-col justify-between bg-white rounded-2xl shadow-md"
+      className="mb-3 p-4 mt-10 h-64 flex flex-col justify-between bg-white rounded-2xl shadow-md"
     >
       <CardContent className="flex flex-col justify-between h-full p-0">
         <div className="flex justify-between items-start">
@@ -39,15 +95,33 @@ export const CardTask = ({ item }: CardTaskProps) => {
             >
               {item.name}
             </Typography>
+            <Typography className="mt-5 text-cyan-800" fontSize="14px">
+              {item.description}
+            </Typography>
           </div>
 
-          <div className="text-gray-400 text-xl font-bold">...</div>
+          <IconButton onClick={handleMenuClick} className="text-gray-400">
+            <MoreHorizontalIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleDelete}>Видалити</MenuItem>
+            <MenuItem onClick={handleAddDesc}>Додати опис</MenuItem>
+          </Menu>
         </div>
 
+        <label className="text-sm font-medium mb-2 block">Task Stage:</label>
+        <Select
+          control={control}
+          name="typeOfTask"
+          options={SelectOption}
+          placeholder="change process"
+          onChange={(e: SelectChangeEvent) => handleChangeType(e)}
+        />
         <div className="flex justify-between mt-4 px-1">
-          <Button size="sm" variant="light" className="text-gray-600">
-            remove
-          </Button>
           <Button size="sm" variant="light" className="text-gray-600">
             Add desc
           </Button>

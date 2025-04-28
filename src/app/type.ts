@@ -1,6 +1,8 @@
 import { DebouncedFunc } from "lodash";
 import { ChangeEventHandler } from "react";
 import { Control } from "react-hook-form";
+import { AddTasks } from "../components/Auth/zodValidations";
+import { SelectChangeEvent } from "@mui/material";
 
 // social
 export type User = {
@@ -129,7 +131,7 @@ export type AddReview = {
 export type SelectProps = {
   name: string;
   control: Control<any>;
-
+  onChange?: (value: SelectChangeEvent) => void;
   options: { value: string; label: string }[];
   placeholder: string;
 };
@@ -149,9 +151,19 @@ export type Task = {
     color: string;
     title: "HIGH PRIORITY" | "IN PROGRESS" | "COMPLETED";
   };
+  description: string;
 };
 
 export type PriorityTaskProps = {
   type: taskType;
+};
+export type CardTaskProps = {
+  item: Task;
+};
+export type AddTask = {
+  modal: boolean;
+  setModal: (e: boolean) => void;
+  control: Control<AddTasks>;
+  SelectOption: { value: string; label: string }[];
 };
 //tasks

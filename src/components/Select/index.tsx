@@ -4,6 +4,7 @@ import {
   Select as MuiSelect,
   MenuItem,
   FormHelperText,
+  SelectChangeEvent,
 } from "@mui/material";
 import { useController } from "react-hook-form";
 import { SelectProps } from "../../app/type";
@@ -13,22 +14,20 @@ export const Select = ({
   control,
   options,
   placeholder,
+  onChange,
 }: SelectProps) => {
   const {
     field,
     fieldState: { error },
-  } = useController({
-    name,
-    control,
-  });
+  } = useController({ name, control });
 
   return (
     <FormControl fullWidth error={!!error}>
       <InputLabel>{placeholder}</InputLabel>
-      <MuiSelect id={name} {...field}>
-        {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
+      <MuiSelect id={name} {...field} onChange={onChange} label={placeholder}>
+        {options.map((opt) => (
+          <MenuItem key={opt.value} value={opt.value}>
+            {opt.label}
           </MenuItem>
         ))}
       </MuiSelect>

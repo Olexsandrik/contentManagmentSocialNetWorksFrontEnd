@@ -69,7 +69,18 @@ export const reviewsSettings = z.object({
   typeOfReviews: z.string().min(1, { message: "take type of reviews" }),
 });
 
+export const addTasks = z.object({
+  name: z.string().max(15, { message: "so long for this" }),
+  type: z.enum(["HIGH PRIORITY", "IN PROGRESS", "COMPLETED"], {
+    errorMap: () => ({ message: "This type not exist" }),
+  }),
+  date: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Invalid date format",
+  }),
+});
+
 export type GetLoginShema = z.infer<ReturnType<typeof getLoginShemaMain>>;
 export type RegisterShema = z.infer<ReturnType<typeof registerShema>>;
 export type ChangeProfile = z.infer<typeof changeProfile>;
 export type ReviewsSettings = z.infer<typeof reviewsSettings>;
+export type AddTasks = z.infer<typeof addTasks>;

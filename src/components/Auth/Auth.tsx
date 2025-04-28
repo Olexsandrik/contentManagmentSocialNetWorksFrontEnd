@@ -3,10 +3,7 @@ import { Login } from "./Login";
 import { Register } from "./Register";
 import { useState } from "react";
 
-// export type Login = {
-//   email: string;
-//   password: string;
-// };
+
 
 export const Auth = () => {
   const [selected, setSelected] = useState("login");
