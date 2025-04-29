@@ -1,5 +1,5 @@
 import { DebouncedFunc } from "lodash";
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
 import { Control } from "react-hook-form";
 import { AddTasks } from "../components/Auth/zodValidations";
 import { SelectChangeEvent } from "@mui/material";
@@ -133,7 +133,8 @@ export type SelectProps = {
   control: Control<any>;
   onChange?: (value: SelectChangeEvent) => void;
   options: { value: string; label: string }[];
-  placeholder: string;
+  placeholder?: string;
+  className?: string;
 };
 
 //tasks
@@ -165,5 +166,8 @@ export type AddTask = {
   setModal: (e: boolean) => void;
   control: Control<AddTasks>;
   SelectOption: { value: string; label: string }[];
+  setDataTask: Dispatch<SetStateAction<Task[]>>;
+  taskType: taskType[];
+  handleSubmit: any;
 };
 //tasks

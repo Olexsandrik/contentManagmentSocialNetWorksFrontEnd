@@ -19,14 +19,15 @@ export const CardTask = ({
   control,
   SelectOption,
   setDataTask,
-  dataTask,
+
   taskType,
 }: any) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleChangeType = (e: SelectChangeEvent) => {
-    const newTitle = e.target.value as string;
+    const newTitle = e.target.value;
+
     setDataTask((prev: Task[]) => {
       return prev.map((t) => {
         return t.id === item.id
@@ -35,9 +36,8 @@ export const CardTask = ({
               priority: {
                 ...t.priority,
                 title: newTitle,
-                color: taskType.find((item: TypeTasks) => {
-                  return item.title === newTitle;
-                }).color,
+                color: taskType.find((i: TypeTasks) => i.title === newTitle)
+                  ?.color,
               },
             }
           : t;
@@ -125,6 +125,7 @@ export const CardTask = ({
           options={SelectOption}
           placeholder="change process"
           onChange={(e: SelectChangeEvent) => handleChangeType(e)}
+          className="max-w-[160px] max-h-[40px]"
         />
         <div className="flex justify-between mt-4 px-1">
           <Button size="sm" variant="light" className="text-gray-600">

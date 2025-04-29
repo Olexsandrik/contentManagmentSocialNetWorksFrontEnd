@@ -139,7 +139,6 @@ export const TaskManager = () => {
                     control={control}
                     SelectOption={SelectOption}
                     setDataTask={setDataTask}
-                    dataTask={dataTask}
                     taskType={taskType}
                   />
                 );
@@ -171,6 +170,9 @@ export const TaskManager = () => {
           setModal={setModal}
           control={control}
           SelectOption={SelectOption}
+          setDataTask={setDataTask}
+          taskType={taskType}
+          handleSubmit={handleSubmit}
         />
       </div>
     </div>

@@ -3,19 +3,36 @@ import { MainModal } from "../../Modal";
 import { Input } from "../Input";
 import { Select } from "../Select";
 import { Button } from "@mui/material";
-import { Control } from "react-hook-form";
-import { AddTask } from "../../app/type";
+import { Control, useForm } from "react-hook-form";
+import { AddTask, Task } from "../../app/type";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AddTasks as addTaskSubmit } from "../Auth/zodValidations";
 
 export const AddTasks = ({
   modal,
   setModal,
   control,
   SelectOption,
+  setDataTask,
+  taskType,
+  handleSubmit,
 }: AddTask) => {
-  const [title, setTitle] = useState("");
-  const [stage, setStage] = useState("");
-  const [date, setDate] = useState("");
-  const handlerTask = () => {};
+  const onSubmit = (data: addTaskSubmit) => {
+    const addNewTask: Task = {
+      id: String(Date.now()),
+      userId: 999,
+      name: data.name,
+      createdAt: new Date(data.date).toISOString(),
+      updatedAt: new Date().toISOString(),
+      priority: {
+        title: data.type,
+        color: taskType.find((t) => t.title === data.type)?.color ?? "gray",
+      },
+      description: "",
+    };
+    setDataTask((prev) => [...prev, addNewTask]);
+    setModal(false);
+  };
   return (
     <MainModal
       open={modal}
@@ -29,7 +46,7 @@ export const AddTasks = ({
           <label className="text-lg font-semibold mb-2 block">Task title</label>
           <Input
             control={control}
-            name="topics"
+            name="name"
             label="Task title"
             placeholder="Text field data"
             className="w-full"
@@ -43,7 +60,7 @@ export const AddTasks = ({
             </label>
             <Select
               control={control}
-              name="typeOfTask"
+              name="type"
               options={SelectOption}
               placeholder="TODO"
             />
@@ -53,7 +70,7 @@ export const AddTasks = ({
             <label className="text-sm font-medium mb-2 block">Task Date</label>
             <Input
               control={control}
-              name="taskDate"
+              name="date"
               type="date"
               placeholder="Select date"
               className="w-full"
@@ -65,7 +82,11 @@ export const AddTasks = ({
           <Button variant="contained" onClick={() => setModal(false)}>
             Close
           </Button>
-          <Button variant="contained" type="submit">
+          <Button
+            variant="contained"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+          >
             Add Task
           </Button>
         </div>
