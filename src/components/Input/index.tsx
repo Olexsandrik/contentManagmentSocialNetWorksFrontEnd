@@ -14,6 +14,7 @@ export const Input = ({
   textFields,
   className,
   value,
+  size,
   onChange,
 }: InputProps) => {
   const {
@@ -45,7 +46,7 @@ export const Input = ({
       onChange={handleChange}
       onBlur={field.onBlur}
       errorMessage={`${errors[name]?.message ?? ""}`}
-      minRows={6}
+      minRows={size ? size : 4}
       classNames={{
         errorMessage: "text-red-500 text-sm",
       }}

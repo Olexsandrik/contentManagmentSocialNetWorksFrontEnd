@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { CardTaskProps, Task } from "../../app/type";
+import { Task, taskType } from "../../app/type";
 import { MainModal } from "../../Modal";
 import { Input } from "../Input";
 import { useForm } from "react-hook-form";
 import { Select } from "../Select";
 import { Button } from "@mui/material";
 
-export const EditTask = (item: CardTaskProps, SelectOption: any) => {
+export const EditTask = (
+  item: Task,
+  SelectOption: { value: string; label: string }[]
+) => {
   const [modal, setModal] = useState(false);
 
   const {

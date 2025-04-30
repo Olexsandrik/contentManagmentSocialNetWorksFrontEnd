@@ -118,6 +118,7 @@ export type InputProps = {
   endContent?: React.JSX.Element;
   className?: string;
   value?: string;
+  size?: number;
   textFields?: Boolean;
   onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
@@ -138,29 +139,35 @@ export type SelectProps = {
 };
 
 //tasks
+type TaskType = "HIGH PRIORITY" | "IN PROGRESS" | "COMPLETED";
 export type taskType = {
   title: string;
   color: string;
 };
 export type Task = {
-  id: string;
+  id?: string;
   userId: number;
   name: string;
   createdAt: string;
   updatedAt: string;
   priority: {
     color: string;
-    title: "HIGH PRIORITY" | "IN PROGRESS" | "COMPLETED";
+    title: string;
   };
-  description: string;
+  desc: string;
 };
 
 export type PriorityTaskProps = {
   type: taskType;
 };
-export type CardTaskProps = {
-  item: Task;
+
+export type addDataForValue = {
+  name: string;
+  type: TaskType;
+  date: string;
+  desc: string;
 };
+
 export type AddTask = {
   modal: boolean;
   setModal: (e: boolean) => void;

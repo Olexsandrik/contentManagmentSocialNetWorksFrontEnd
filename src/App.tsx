@@ -1,10 +1,10 @@
 import { Provider } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Home } from "./page/Home";
 import { Auth } from "./components/Auth/Auth";
 import { Layout } from "./components/Layout";
 import { NotFound } from "./page";
-import { Dashboard } from "./components/Dashboard";
+
 import { AnalyticsDashboard } from "./components/Analytics";
 
 import FacebookRedirectHandler from "./components/FacebookRedirectHandler";
@@ -13,6 +13,7 @@ import { Settings } from "./components/Settings";
 import { Reviews } from "./components/Reviews";
 import { Post } from "./components/Post";
 import { AnalyticsAI } from "./components/AnalyticsAI";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/auth" element={<Auth />} />
           <Route path="/login/success" element={<FacebookRedirectHandler />} />
           <Route path="/maincontent" element={<Layout />}>
+            <Route index element={<Navigate to="dashboard" />} />
             <Route index path="dashboard" element={<Dashboard />} />
             <Route path="analytics" element={<AnalyticsDashboard />} />
             <Route path="ToDoList" element={<TaskManager />} />

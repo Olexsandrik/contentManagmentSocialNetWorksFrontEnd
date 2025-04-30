@@ -77,6 +77,8 @@ export const addTasks = z.object({
   date: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "Invalid date format",
   }),
+
+  desc: z.string().max(10, { message: "description so long" }),
 });
 
 export type GetLoginShema = z.infer<ReturnType<typeof getLoginShemaMain>>;

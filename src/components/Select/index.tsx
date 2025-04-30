@@ -23,7 +23,7 @@ export const Select = ({
   } = useController({ name, control });
 
   return (
-    <FormControl fullWidth error={!!error} size="small">
+    <FormControl fullWidth error={!!error} size="small" className={className}>
       <InputLabel>{placeholder}</InputLabel>
       <MuiSelect
         id={name}
@@ -33,7 +33,6 @@ export const Select = ({
           onChange?.(e);
         }}
         label={placeholder}
-        className={className}
       >
         {options.map((opt) => (
           <MenuItem key={opt.value} value={opt.value}>

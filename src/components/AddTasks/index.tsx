@@ -19,7 +19,6 @@ export const AddTasks = ({
 }: AddTask) => {
   const onSubmit = (data: addTaskSubmit) => {
     const addNewTask: Task = {
-      id: String(Date.now()),
       userId: 999,
       name: data.name,
       createdAt: new Date(data.date).toISOString(),
@@ -28,8 +27,9 @@ export const AddTasks = ({
         title: data.type,
         color: taskType.find((t) => t.title === data.type)?.color ?? "gray",
       },
-      description: "",
+      desc: "",
     };
+
     setDataTask((prev) => [...prev, addNewTask]);
     setModal(false);
   };
