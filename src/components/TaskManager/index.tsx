@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "@mui/material";
 import type { Task, taskType as TypeTask } from "../../app/type";
@@ -9,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { type AddTasks, addTasks } from "../Auth/zodValidations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddTasks as NewTask } from "../AddTasks";
+import { usePostTask } from "../../hooks/usePostTask";
 
 const taskType: TypeTask[] = [
   { color: "red", title: "HIGH PRIORITY" },
@@ -92,20 +91,24 @@ const tasks: Task[] = [
 ];
 
 export const TaskManager = () => {
+  const { submitReview, task, isLoading, error, setTask } =
+    usePostTask("server/todo");
+
   const [modal, setModal] = useState(false);
   const [dataTask, setDataTask] = useState<Task[]>(tasks);
 
-  const { control, handleSubmit, getValues } = useForm<AddTasks>({
-    mode: "onChange",
-    resolver: zodResolver(addTasks),
-    reValidateMode: "onBlur",
-    defaultValues: {
-      name: "",
-      type: "COMPLETED",
-      date: "",
-      desc: "",
-    },
-  });
+  const { control, handleSubmit, getValues, setValue, reset } =
+    useForm<AddTasks>({
+      mode: "onChange",
+      resolver: zodResolver(addTasks),
+      reValidateMode: "onBlur",
+      defaultValues: {
+        name: "",
+        type: "COMPLETED",
+        date: "",
+        desc: "",
+      },
+    });
 
   const SelectOption = taskType.map((item) => {
     return {
@@ -155,6 +158,8 @@ export const TaskManager = () => {
                     taskType={taskType}
                     getValues={getValues}
                     handleSubmit={handleSubmit}
+                    reset={reset}
+                    setValue={setValue}
                   />
                 ))}
                 {filterTask.length === 0 && (
@@ -188,7 +193,6 @@ export const TaskManager = () => {
         </div>
       </div>
 
-      {/* Add task modal */}
       <NewTask
         modal={modal}
         setModal={setModal}

@@ -31,6 +31,7 @@ export const AddTasks = ({
     };
 
     setDataTask((prev) => [...prev, addNewTask]);
+
     setModal(false);
   };
   return (

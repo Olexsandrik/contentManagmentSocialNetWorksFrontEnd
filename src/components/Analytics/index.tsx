@@ -16,7 +16,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { usePostGet } from "../../hooks/usePostGet";
+
 import type {
   CardProps,
   EngagementData,
@@ -24,6 +24,7 @@ import type {
   TabContentProps,
 } from "../../../src/app/type";
 import { Loading } from "../Loading";
+import { usePostGet } from "../../hooks/usePostGet";
 
 const mainTab = ["overview", "posts", "likes", "engagement"];
 

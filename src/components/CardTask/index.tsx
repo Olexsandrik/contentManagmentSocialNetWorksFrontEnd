@@ -31,6 +31,8 @@ export type CardTaskProps = {
   getValues: UseFormGetValues<addDataForValue>;
   taskType: any;
   handleSubmit: UseFormHandleSubmit<addDataForValue>;
+  reset: any;
+  setValue: any;
 };
 
 export const CardTask = ({
@@ -41,6 +43,8 @@ export const CardTask = ({
   getValues,
   taskType,
   handleSubmit,
+  reset,
+  setValue,
 }: CardTaskProps) => {
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [edit, setEdit] = useState<boolean>(false);
@@ -66,6 +70,7 @@ export const CardTask = ({
             : t;
         });
       });
+      reset();
     }
   };
 
@@ -105,7 +110,9 @@ export const CardTask = ({
           : it;
       }),
     ]);
+
     setIsEditingDesc(false);
+    setValue("desc", "");
   };
 
   const handlerRemoveTask = () => {

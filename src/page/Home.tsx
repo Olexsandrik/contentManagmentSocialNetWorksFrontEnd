@@ -1,4 +1,3 @@
-"use client";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/Animations/ui/button";

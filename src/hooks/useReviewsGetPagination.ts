@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Review } from "../app/type";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
-
-type Meta = {
+export type Meta = {
   page: number;
   limit: number;
   total: number;
