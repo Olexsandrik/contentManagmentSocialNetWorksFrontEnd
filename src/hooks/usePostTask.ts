@@ -7,6 +7,7 @@ type PriorityTask = {
   priority: "HIGH_PRIORITY" | "IN_PROGRESS" | "COMPLETED";
 };
 type Task = {
+  id: number;
   name: string;
   priority: PriorityTask;
   desc?: string;
@@ -19,7 +20,7 @@ export const usePostTask = (mainUrl: string | null) => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const submitReview = async (userData: AddReview) => {
+  const submitTask = async (userData: any) => {
     try {
       const token = localStorage.getItem("token");
 
@@ -59,5 +60,5 @@ export const usePostTask = (mainUrl: string | null) => {
     }
   };
 
-  return { submitReview, task, isLoading, error, setTask };
+  return { submitTask, task, isLoading, error, setTask };
 };

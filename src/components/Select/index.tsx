@@ -36,7 +36,7 @@ export const Select = ({
       >
         {options.map((opt) => (
           <MenuItem key={opt.value} value={opt.value}>
-            {opt.label}
+            <span style={{color: opt.value}}>{opt.label}</span>
           </MenuItem>
         ))}
       </MuiSelect>

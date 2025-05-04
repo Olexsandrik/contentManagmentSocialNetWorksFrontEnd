@@ -139,22 +139,18 @@ export type SelectProps = {
 };
 
 //tasks
-type TaskType = "HIGH PRIORITY" | "IN PROGRESS" | "COMPLETED";
+type TaskType = "HIGH_PRIORITY" | "IN_PROGRESS" | "COMPLETED";
 export type taskType = {
   title: string;
   color: string;
 };
 export type Task = {
-  id?: string;
-  userId: number;
+  id: string;
   name: string;
   createdAt: string;
   updatedAt: string;
-  priority: {
-    color: string;
-    title: string;
-  };
-  desc: string;
+  priority: TaskType;
+  desc?: string;
 };
 
 export type PriorityTaskProps = {
@@ -173,8 +169,14 @@ export type AddTask = {
   setModal: (e: boolean) => void;
   control: Control<AddTasks>;
   SelectOption: { value: string; label: string }[];
-  setDataTask: Dispatch<SetStateAction<Task[]>>;
-  taskType: taskType[];
+  setTasks: Dispatch<SetStateAction<Task[]>>;
   handleSubmit: any;
 };
+
+export const PriorityMeta: Record<string, { color: string; label: string }> = {
+  HIGH_PRIORITY: { color: "red", label: "HIGH_PRIORITY" },
+  IN_PROGRESS: { color: "orange", label: "IN_PROGRESS" },
+  COMPLETED: { color: "green", label: "COMPLETED" },
+};
+
 //tasks

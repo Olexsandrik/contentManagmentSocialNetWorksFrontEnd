@@ -7,33 +7,34 @@ import { Control, useForm } from "react-hook-form";
 import { AddTask, Task } from "../../app/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddTasks as addTaskSubmit } from "../Auth/zodValidations";
+import { usePostTask } from "../../hooks/usePostTask";
 
 export const AddTasks = ({
   modal,
   setModal,
   control,
   SelectOption,
-  setDataTask,
-  taskType,
+  setTasks,
+
   handleSubmit,
 }: AddTask) => {
+  const { submitTask, task, isLoading, error, setTask } =
+    usePostTask("server/todo");
   const onSubmit = (data: addTaskSubmit) => {
-    const addNewTask: Task = {
-      userId: 999,
+    const addNewTask: any = {
       name: data.name,
       createdAt: new Date(data.date).toISOString(),
       updatedAt: new Date().toISOString(),
-      priority: {
-        title: data.type,
-        color: taskType.find((t) => t.title === data.type)?.color ?? "gray",
-      },
+      date: new Date(data.date).toISOString(),
+      priority: data.type,
       desc: "",
     };
-
-    setDataTask((prev) => [...prev, addNewTask]);
+    submitTask(addNewTask);
+    setTasks((prev) => [...prev, addNewTask]);
 
     setModal(false);
   };
+
   return (
     <MainModal
       open={modal}

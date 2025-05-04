@@ -28,79 +28,71 @@ export type CardTaskProps = {
   control: Control<AddTasks>;
   SelectOption: { value: string; label: string }[];
   setDataTask: React.Dispatch<React.SetStateAction<Task[]>>;
-  getValues: UseFormGetValues<addDataForValue>;
+  getValues: UseFormGetValues<any>;
   taskType: any;
-  handleSubmit: UseFormHandleSubmit<addDataForValue>;
+  handleSubmit: UseFormHandleSubmit<any>;
   reset: any;
   setValue: any;
+  PriorityMeta: any;
 };
 
 export const CardTask = ({
   item,
   control,
   SelectOption,
-  setDataTask,
+  setTasks,
   getValues,
-  taskType,
-  handleSubmit,
   reset,
   setValue,
-}: CardTaskProps) => {
+  PriorityMeta,
+}: any) => {
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleChangeType = (e: SelectChangeEvent) => {
-    const newTitle = e.target.value;
+    const newTitle = e.target.value as any;
 
-    if (["HIGH PRIORITY", "IN PROGRESS", "COMPLETED"].includes(newTitle)) {
-      setDataTask((prev: Task[]) => {
-        return prev.map((t) => {
-          return t.id === item.id
+    const isValid = SelectOption.some((item: any) => item.value === newTitle);
+
+    if (isValid) {
+      setTasks((prev: Task[]) =>
+        prev.map((t) =>
+          t.id === item.id
             ? {
                 ...t,
-                priority: {
-                  ...t.priority,
-                  title: newTitle,
-                  color: taskType.find((i: taskType) => i.title === newTitle)
-                    ?.color,
-                },
-                desc: "",
+                priority: newTitle,
               }
-            : t;
-        });
-      });
+            : t
+        )
+      );
       reset();
     }
   };
 
-  const onSubmit = (data: any) => {
-    setDataTask((prev: Task[]) =>
-      prev.map((it) =>
-        it.id === item.id
-          ? {
-              ...it,
-              name: data.name,
-              type: data.type,
-              updatedAt: data.date,
-              desc: data.desc,
-              priority: {
-                title: data.type,
-                color: taskType.find((i: taskType) => i.title === data.type)
-                  ?.color,
-              },
-            }
-          : it
-      )
-    );
+  // const onSubmit = (data: any) => {
+  //   setTasks((prev: any[]) =>
+  //     prev.map((it) =>
+  //       it.id === item.id
+  //         ? {
+  //             ...it,
+  //             name: data.name,
+  //             type: data.type,
+  //             updatedAt: data.date,
+  //             desc: data.desc,
+  //             priority: data.type,
+  //           }
+  //         : it
+  //     )
+  //   );
 
-    setAnchorEl(null);
-    setEdit(false);
-  };
+  //   setAnchorEl(null);
+  //   setEdit(false);
+  // };
 
   const handleSaveDesc = () => {
     const desc = getValues("desc");
-    setDataTask((prev: Task[]) => [
+    setTasks((prev: any[]) => [
       ...prev.map((it) => {
         return it.id === item.id
           ? {
@@ -116,7 +108,7 @@ export const CardTask = ({
   };
 
   const handlerRemoveTask = () => {
-    setDataTask((prev: Task[]) => prev.filter((it) => it.id !== item.id));
+    setTasks((prev: Task[]) => prev.filter((it) => it.id !== item.id));
     setAnchorEl(null);
   };
 
@@ -144,16 +136,16 @@ export const CardTask = ({
             <div className="flex items-center space-x-2">
               <span
                 className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: item.priority.color }}
+                style={{ backgroundColor: PriorityMeta[item.priority].color }}
               />
               <Typography
                 variant="subtitle2"
                 style={{
-                  color: item.priority.color,
+                  color: PriorityMeta[item.priority].color,
                   fontWeight: 600,
                 }}
               >
-                {item.priority.title}
+                {item.priority}
               </Typography>
             </div>
 
@@ -162,7 +154,7 @@ export const CardTask = ({
               className="text-gray-500 block"
               sx={{ fontSize: { xs: "0.7rem", sm: "0.75rem" } }}
             >
-              {new Date(item.updatedAt).toLocaleDateString("en-GB")}
+              {new Date(item.date).toLocaleDateString("en-GB")}
             </Typography>
 
             <Typography
@@ -324,11 +316,7 @@ export const CardTask = ({
               >
                 Close
               </Button>
-              <Button
-                type="submit"
-                onClick={handleSubmit(onSubmit)}
-                className="order-1 sm:order-2"
-              >
+              <Button type="submit" className="order-1 sm:order-2">
                 Edit Task
               </Button>
             </div>

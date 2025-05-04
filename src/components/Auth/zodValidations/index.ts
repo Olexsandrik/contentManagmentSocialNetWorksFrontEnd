@@ -71,12 +71,17 @@ export const reviewsSettings = z.object({
 
 export const addTasks = z.object({
   name: z.string().max(15, { message: "so long for this" }),
-  type: z.enum(["HIGH PRIORITY", "IN PROGRESS", "COMPLETED"], {
+  type: z.enum(["HIGH_PRIORITY", "IN_PROGRESS", "COMPLETED"], {
     errorMap: () => ({ message: "This type not exist" }),
   }),
-  date: z.string().refine((val) => !isNaN(Date.parse(val)), {
-    message: "Invalid date format",
-  }),
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: "Date must be in YYYY-MM-DD format",
+    })
+    .refine((val) => !isNaN(Date.parse(val)), {
+      message: "Invalid date value",
+    }),
 
   desc: z.string().max(10, { message: "description so long" }),
 });
