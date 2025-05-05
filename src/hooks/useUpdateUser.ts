@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
 
-// Тип даних, які приходять від сервера
 type User = {
   id: number;
   name: string | null;

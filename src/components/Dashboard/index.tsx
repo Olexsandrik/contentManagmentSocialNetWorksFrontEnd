@@ -19,80 +19,20 @@ import {
 } from "lucide-react";
 import { Card } from "@mui/material";
 import { Badge } from "lucide-react";
-
-interface Task {
-  id: number;
-  title: string;
-  priority: "High" | "Medium" | "Normal" | "Low";
-  createdAt: string;
-  type: "blue" | "orange" | "green";
-}
+import { useTasksAllGet } from "../../hooks/useTasksAllGet";
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: "Design new landing page",
-      priority: "High",
-      createdAt: "2 days ago",
-      type: "blue",
-    },
-    {
-      id: 2,
-      title: "Implement authentication",
-      priority: "High",
-      createdAt: "3 days ago",
-      type: "orange",
-    },
-    {
-      id: 3,
-      title: "Create API documentation",
-      priority: "Medium",
-      createdAt: "1 week ago",
-      type: "green",
-    },
-    {
-      id: 4,
-      title: "Fix navigation bug",
-      priority: "High",
-      createdAt: "5 days ago",
-      type: "blue",
-    },
-    {
-      id: 5,
-      title: "Optimize database queries",
-      priority: "Medium",
-      createdAt: "2 weeks ago",
-      type: "green",
-    },
-    {
-      id: 6,
-      title: "Update user profile UI",
-      priority: "Normal",
-      createdAt: "4 days ago",
-      type: "blue",
-    },
-    {
-      id: 7,
-      title: "Implement file upload",
-      priority: "High",
-      createdAt: "1 day ago",
-      type: "orange",
-    },
-    {
-      id: 8,
-      title: "Create email templates",
-      priority: "Low",
-      createdAt: "3 weeks ago",
-      type: "green",
-    },
-  ]);
+  const { tasks, setTasks } = useTasksAllGet("server/todoall");
 
   const totalTask = tasks.length;
-  const totalDone = 4;
-  const totalInProgress = 6;
+  const totalDone = tasks.filter(
+    (item) => item.priority === "COMPLETED"
+  ).length;
+  const totalInProgress = tasks.filter(
+    (item) => item.priority === "IN_PROGRESS"
+  ).length;
   const totalHighPriority = tasks.filter(
-    (task) => task.priority === "High"
+    (task) => task.priority === "HIGH_PRIORITY"
   ).length;
 
   const cardsBaseInfo = [
@@ -133,25 +73,24 @@ export default function Dashboard() {
   const chartData = [
     { name: "Completed", value: totalDone },
     { name: "In Progress", value: totalInProgress },
-    { name: "Total", value: totalTask },
+    { name: "High priority", value: totalHighPriority },
   ];
 
   const COLORS = [
     "rgba(16, 185, 129, 0.9)",
     "rgba(249, 115, 22, 0.9)",
-    "rgba(59, 130, 246, 0.9)",
+    "rgba(239, 68, 68, 0.9)",
   ];
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "High":
+      case "HIGH_PRIORITY":
         return "bg-red-100 text-red-800";
-      case "Medium":
+      case "IN_PROGRESS":
         return "bg-orange-100 text-orange-800";
-      case "Normal":
-        return "bg-blue-100 text-blue-800";
-      case "Low":
+      case "COMPLETED":
         return "bg-green-100 text-green-800";
+
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -243,18 +182,18 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {tasks.slice(0, 10).map((task) => (
+                {tasks.slice(0, 10).map((task, index) => (
                   <tr key={task.id} className="border-b hover:bg-gray-50">
                     <td className="py-3 px-4">
                       <div className="flex items-center">
                         <div className="mr-2">
-                          {task.id % 2 === 0 ? (
+                          {index % 2 === 0 ? (
                             <Clock className="h-5 w-5 text-orange-500" />
                           ) : (
                             <CheckCircle className="h-5 w-5 text-emerald-500" />
                           )}
                         </div>
-                        <span className="font-medium">{task.title}</span>
+                        <span className="font-medium">{task.name}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4 hidden md:table-cell">

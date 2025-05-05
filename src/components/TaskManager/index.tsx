@@ -59,7 +59,7 @@ export const TaskManager = () => {
       defaultValues: {
         name: "",
         type: "COMPLETED",
-        date: new Date().toISOString().split("T")[0],
+        date: new Date(),
         desc: "",
       },
     });

@@ -24,6 +24,8 @@ import {
 import { AddTasks } from "../Auth/zodValidations";
 import { usePatchPriority } from "../../hooks/usePatchPriority";
 import { usePatchDesc } from "../../hooks/usePatchDesc";
+import { useDeleteTask } from "../../hooks/useDeleteTask";
+import { useUpdateTasks } from "../../hooks/useUpdateTasks";
 
 export type CardTaskProps = {
   item: Task;
@@ -52,10 +54,31 @@ export const CardTask = ({
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const { submitUpdateData } = useUpdateTasks(`server/todo/${item.id}`);
   const { onChangeDesc } = usePatchDesc(`server/todo/${item.id}/desc`);
   const { onChangePriority } = usePatchPriority(
     `server/todo/${item.id}/priority`
   );
+  const { handlerDeleteTask } = useDeleteTask(`server/todo/${item.id}`);
+
+  const onSubmitEdit = async (data: any) => {
+    const { name, date, type, desc } = data;
+    const updatedTask = {
+      name,
+      date,
+      priority: type,
+      desc,
+    };
+    setTasks((prev: any) => {
+      return prev.map((it: any) => {
+        return it.id === item.id ? updatedTask : it;
+      });
+    });
+    await submitUpdateData(updatedTask);
+
+    setEdit(false);
+  };
   const handleChangeType = (e: SelectChangeEvent) => {
     const newTitle = e.target.value as string;
 
@@ -98,8 +121,9 @@ export const CardTask = ({
     setValue("desc", "");
   };
 
-  const handlerRemoveTask = () => {
+  const handlerRemoveTask = async () => {
     setTasks((prev: Task[]) => prev.filter((it) => it.id !== item.id));
+    await handlerDeleteTask(item.id);
     setAnchorEl(null);
   };
 
@@ -307,7 +331,11 @@ export const CardTask = ({
               >
                 Close
               </Button>
-              <Button type="submit" className="order-1 sm:order-2">
+              <Button
+                type="submit"
+                className="order-1 sm:order-2"
+                onClick={handleSubmit(onSubmitEdit)}
+              >
                 Edit Task
               </Button>
             </div>

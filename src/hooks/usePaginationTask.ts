@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { SocialMediaComment, SocialMediaPost } from "../app/type";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
 import { Meta } from "./useReviewsGetPagination";
@@ -42,8 +41,6 @@ export function usePaginationTask(
         const data = await response.json();
 
         setTasks(data.data);
-
-        console.log("Cool pagination", data);
 
         setMeta(data.meta);
         console.log(data.meta);
