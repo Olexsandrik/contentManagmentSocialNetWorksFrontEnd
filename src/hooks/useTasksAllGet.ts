@@ -8,7 +8,7 @@ export type Tasks = {
   date: Date;
   name: string;
   priority: string;
-  createdAt: ReactNode;
+  createdAt: Date;
   desc: string;
 };
 

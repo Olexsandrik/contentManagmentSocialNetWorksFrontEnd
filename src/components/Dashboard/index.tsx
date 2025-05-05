@@ -16,10 +16,12 @@ import {
   ListTodo,
   AlertTriangle,
   Calendar,
+  AlertCircle,
 } from "lucide-react";
 import { Card } from "@mui/material";
 import { Badge } from "lucide-react";
 import { useTasksAllGet } from "../../hooks/useTasksAllGet";
+import { formatRelativeDate } from "../../utils/formatRelativeDate";
 
 export default function Dashboard() {
   const { tasks, setTasks } = useTasksAllGet("server/todoall");
@@ -187,10 +189,14 @@ export default function Dashboard() {
                     <td className="py-3 px-4">
                       <div className="flex items-center">
                         <div className="mr-2">
-                          {index % 2 === 0 ? (
-                            <Clock className="h-5 w-5 text-orange-500" />
-                          ) : (
+                          {task.priority === "COMPLETED" && (
                             <CheckCircle className="h-5 w-5 text-emerald-500" />
+                          )}
+                          {task.priority === "IN_PROGRESS" && (
+                            <CheckCircle className="h-5 w-5 text-orange-500" />
+                          )}
+                          {task.priority === "HIGH_PRIORITY" && (
+                            <AlertCircle className="h-5 w-5 text-red-500" />
                           )}
                         </div>
                         <span className="font-medium">{task.name}</span>
@@ -204,7 +210,7 @@ export default function Dashboard() {
                     <td className="py-3 px-4 text-gray-500 text-sm hidden sm:table-cell">
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 mr-1" />
-                        {task.createdAt}
+                        {formatRelativeDate(task.createdAt)}
                       </div>
                     </td>
                   </tr>
