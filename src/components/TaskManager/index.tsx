@@ -8,6 +8,7 @@ import { type AddTasks, addTasks } from "../Auth/zodValidations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddTasks as NewTask } from "../AddTasks";
 import { usePaginationTask } from "../../hooks/usePaginationTask";
+import { color } from "framer-motion";
 
 // const tasks: Task[] = [
 //   {
@@ -46,7 +47,7 @@ export const TaskManager = () => {
     "server/todoget",
 
     page,
-    9
+    6
   );
 
   const { control, handleSubmit, getValues, setValue, reset } =
@@ -63,11 +64,11 @@ export const TaskManager = () => {
       },
     });
 
-  const SelectOption = Object.entries(PriorityMeta).map(([key, value]) => ({
-    value: key,
-    label: value.label,
-    color: value.color,
-  }));
+  const SelectOption = [
+    { value: "red", label: "HIGH_PRIORITY" },
+    { value: "orange", label: "IN_PROGRESS" },
+    { value: "green", label: "COMPLETED" },
+  ];
 
   return (
     <div className="p-4 sm:p-6 md:p-10 bg-gray-50">
@@ -93,11 +94,13 @@ export const TaskManager = () => {
         </div>
 
         <div className="flex flex-col md:flex-row md:justify-around gap-6 md:gap-4">
-          {Object.entries(PriorityMeta).map(([key, type]) => {
-            const filterTask = tasks.filter((task) => task.priority === key);
+          {SelectOption.map((it) => {
+            const filterTask = tasks.filter(
+              (task) => task.priority === it.label
+            );
             return (
-              <div key={key} className="w-full md:w-80 md:mr-4">
-                <PriorityTask type={type} />
+              <div key={it.label} className="w-full md:w-80 md:mr-4">
+                <PriorityTask type={it} />
                 <div className="mt-3 space-y-3">
                   {filterTask.map((item) => (
                     <CardTask

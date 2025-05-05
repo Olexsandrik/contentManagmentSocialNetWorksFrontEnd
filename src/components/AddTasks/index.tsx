@@ -22,6 +22,7 @@ export const AddTasks = ({
     usePostTask("server/todo");
   const onSubmit = (data: addTaskSubmit) => {
     const addNewTask: any = {
+      id: task?.id,
       name: data.name,
       createdAt: new Date(data.date).toISOString(),
       updatedAt: new Date().toISOString(),
@@ -29,6 +30,8 @@ export const AddTasks = ({
       priority: data.type,
       desc: "",
     };
+
+    
     submitTask(addNewTask);
     setTasks((prev) => [...prev, addNewTask]);
 

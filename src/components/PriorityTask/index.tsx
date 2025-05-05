@@ -8,7 +8,7 @@ export const PriorityTask = ({ type }: any) => {
       <CardContent className="flex justify-center content-center ">
         <Typography
           sx={{
-            backgroundColor: type.color,
+            backgroundColor: type.value,
             width: 20,
             height: 20,
             borderRadius: "50%",

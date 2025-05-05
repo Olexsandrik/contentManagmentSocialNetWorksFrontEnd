@@ -22,6 +22,8 @@ import {
   UseFormHandleSubmit,
 } from "react-hook-form";
 import { AddTasks } from "../Auth/zodValidations";
+import { usePatchPriority } from "../../hooks/usePatchPriority";
+import { usePatchDesc } from "../../hooks/usePatchDesc";
 
 export type CardTaskProps = {
   item: Task;
@@ -42,6 +44,7 @@ export const CardTask = ({
   SelectOption,
   setTasks,
   getValues,
+  handleSubmit,
   reset,
   setValue,
   PriorityMeta,
@@ -49,12 +52,15 @@ export const CardTask = ({
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [edit, setEdit] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  const { onChangeDesc } = usePatchDesc(`server/todo/${item.id}/desc`);
+  const { onChangePriority } = usePatchPriority(
+    `server/todo/${item.id}/priority`
+  );
   const handleChangeType = (e: SelectChangeEvent) => {
-    const newTitle = e.target.value as any;
+    const newTitle = e.target.value as string;
 
-    const isValid = SelectOption.some((item: any) => item.value === newTitle);
-
+    const isValid = SelectOption.some((item: any) => item.label === newTitle);
+    console.log(isValid, newTitle);
     if (isValid) {
       setTasks((prev: Task[]) =>
         prev.map((t) =>
@@ -66,32 +72,15 @@ export const CardTask = ({
             : t
         )
       );
+
+      onChangePriority({ priority: newTitle });
+
       reset();
     }
   };
 
-  // const onSubmit = (data: any) => {
-  //   setTasks((prev: any[]) =>
-  //     prev.map((it) =>
-  //       it.id === item.id
-  //         ? {
-  //             ...it,
-  //             name: data.name,
-  //             type: data.type,
-  //             updatedAt: data.date,
-  //             desc: data.desc,
-  //             priority: data.type,
-  //           }
-  //         : it
-  //     )
-  //   );
-
-  //   setAnchorEl(null);
-  //   setEdit(false);
-  // };
-
-  const handleSaveDesc = () => {
-    const desc = getValues("desc");
+  const handleSaveDesc = (data: any) => {
+    const { desc } = data;
     setTasks((prev: any[]) => [
       ...prev.map((it) => {
         return it.id === item.id
@@ -102,6 +91,8 @@ export const CardTask = ({
           : it;
       }),
     ]);
+
+    onChangeDesc({ desc: desc });
 
     setIsEditingDesc(false);
     setValue("desc", "");
@@ -238,7 +229,7 @@ export const CardTask = ({
                 type="submit"
                 size="sm"
                 className="h-8"
-                onClick={handleSaveDesc}
+                onClick={handleSubmit(handleSaveDesc)}
               >
                 Save
               </Button>
