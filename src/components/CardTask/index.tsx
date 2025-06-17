@@ -22,10 +22,10 @@ import {
   UseFormHandleSubmit,
 } from "react-hook-form";
 import { AddTasks } from "../Auth/zodValidations";
-import { usePatchPriority } from "../../hooks/usePatchPriority";
-import { usePatchDesc } from "../../hooks/usePatchDesc";
-import { useDeleteTask } from "../../hooks/useDeleteTask";
-import { useUpdateTasks } from "../../hooks/useUpdateTasks";
+import { usePatchPriority } from "../../servers/usePatchPriority";
+import { usePatchDesc } from "../../servers/usePatchDesc";
+import { useDeleteTask } from "../../servers/useDeleteTask";
+import { useUpdateTasks } from "../../servers/useUpdateTasks";
 
 export type CardTaskProps = {
   item: Task;
@@ -77,6 +77,7 @@ export const CardTask = ({
     });
     await submitUpdateData(updatedTask);
 
+    reset();
     setEdit(false);
   };
   const handleChangeType = (e: SelectChangeEvent) => {
@@ -97,7 +98,6 @@ export const CardTask = ({
       );
 
       onChangePriority({ priority: newTitle });
-
       reset();
     }
   };

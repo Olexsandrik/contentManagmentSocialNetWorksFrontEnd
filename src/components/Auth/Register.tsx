@@ -1,10 +1,10 @@
 import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { Input } from "../Input";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../servers/useAuth";
 import { Register as AuthRegister } from "../../app/type";
 import { RegisterShema, registerShema } from "./zodValidations";
-import { useSidebar } from "../../hooks/useSidebarGet";
+import { useSidebar } from "../../servers/useSidebarGet";
 import { zodResolver } from "@hookform/resolvers/zod";
 type Props = {
   setSelected: (value: string) => void;

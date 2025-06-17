@@ -2,11 +2,11 @@ import { Button, Link } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { Input } from "../Input";
 import { FacebookAuth } from "../FacebookAuth";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../servers/useAuth";
 // import { Login as LoginType } from "../../app/type";
 import { GetLoginShema, getLoginShemaMain } from "./zodValidations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSidebar } from "../../hooks/useSidebarGet";
+import { useSidebar } from "../../servers/useSidebarGet";
 import { User } from "../../app/type";
 
 type Props = {
@@ -28,7 +28,7 @@ export const Login = ({ setSelected }: Props) => {
   });
 
   const { onSubmit, isLoading } = useAuth("server/login");
-  
+
   return (
     <form
       className="space-y-6 w-[700px] h-[600px] p-32 mx-auto rounded-lg"

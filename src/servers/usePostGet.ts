@@ -3,7 +3,7 @@ import { SocialMediaComment, SocialMediaPost } from "../app/type";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../constants";
 
-export function usePostGet(mainUrl: string) {
+export function usePostGet(mainUrl: string, refresh: any) {
   const [posts, setPosts] = useState<SocialMediaPost[]>([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,7 @@ export function usePostGet(mainUrl: string) {
           throw new Error(`Помилка запиту: ${response.status}`);
         }
         const data = await response.json();
-      
+
         setPosts(data);
       } catch (error: any) {
         setError(error.message);
@@ -40,6 +40,6 @@ export function usePostGet(mainUrl: string) {
         setIsLoading(false);
       }
     })();
-  }, [navigate, mainUrl]);
+  }, [navigate, mainUrl, refresh]);
   return { posts, setPosts, isLoading, error };
 }

@@ -1,5 +1,5 @@
 import { Avatar, Box, Card, Chip, Container, Typography } from "@mui/material";
-import { useReviewsGetPagination } from "../../hooks/useReviewsGetPagination";
+import { useReviewsGetPagination } from "../../servers/useReviewsGetPagination";
 import { Pagination, Stack } from "@mui/material";
 import { BASE_URL } from "../../constants";
 import { useState } from "react";

@@ -11,12 +11,12 @@ import { Input } from "../Input";
 import { useForm } from "react-hook-form";
 import { changeProfile, ChangeProfile } from "../Auth/zodValidations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useUpdateUser } from "../../hooks/useUpdateUser";
-import { useUserId } from "../../hooks/useUserId";
+import { useUpdateUser } from "../../servers/useUpdateUser";
+import { useUserId } from "../../servers/useUserId";
 import { ChangeEvent, useCallback, useState } from "react";
 import { debounce } from "lodash";
 import { UserSettings } from "../../app/type";
-import { useSidebar } from "../../hooks/useSidebarGet";
+import { useSidebar } from "../../servers/useSidebarGet";
 
 export const ProfileSettings = ({ tabValue, toast, index }: any) => {
   const userId = useUserId();

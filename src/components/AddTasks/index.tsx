@@ -7,7 +7,7 @@ import { Control, useForm } from "react-hook-form";
 import { AddTask, Task } from "../../app/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddTasks as addTaskSubmit } from "../Auth/zodValidations";
-import { usePostTask } from "../../hooks/usePostTask";
+import { usePostTask } from "../../servers/usePostTask";
 
 export const AddTasks = ({
   modal,
@@ -15,7 +15,7 @@ export const AddTasks = ({
   control,
   SelectOption,
   setTasks,
-
+  reset,
   handleSubmit,
 }: AddTask) => {
   const { submitTask, task, isLoading, error, setTask } =
@@ -31,10 +31,9 @@ export const AddTasks = ({
       desc: "",
     };
 
-    
     submitTask(addNewTask);
     setTasks((prev) => [...prev, addNewTask]);
-
+    reset();
     setModal(false);
   };
 

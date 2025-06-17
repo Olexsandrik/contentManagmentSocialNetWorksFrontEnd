@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { Card } from "@mui/material";
 import { Badge } from "lucide-react";
-import { useTasksAllGet } from "../../hooks/useTasksAllGet";
+import { useTasksAllGet } from "../../servers/useTasksAllGet";
 import { formatRelativeDate } from "../../utils/formatRelativeDate";
 
 export default function Dashboard() {

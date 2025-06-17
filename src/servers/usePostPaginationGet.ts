@@ -1,3 +1,4 @@
+import { comment } from "postcss";
 import { useEffect, useState } from "react";
 import { SocialMediaComment, SocialMediaPost } from "../app/type";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +11,8 @@ export function usePostPaginationGet(
   limit: number = 10
 ) {
   const [posts, setPosts] = useState<SocialMediaPost[]>([]);
+
+  const [comments, setComments] = useState<any>([]);
   const [meta, setMeta] = useState<Meta | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -43,7 +46,16 @@ export function usePostPaginationGet(
 
         setPosts(data.data);
 
-        console.log(data);
+        setComments(
+          data.data.map((prev: any) => {
+            return {
+              postId: prev.id,
+              comments: prev.comments,
+            };
+          })
+        );
+
+      
 
         setMeta(data.meta);
         console.log(data.meta);
@@ -54,5 +66,5 @@ export function usePostPaginationGet(
       }
     })();
   }, [mainUrl, page, limit]);
-  return { posts, setPosts, meta, error, isLoading };
+  return { posts, comments, setPosts, meta, error, isLoading };
 }

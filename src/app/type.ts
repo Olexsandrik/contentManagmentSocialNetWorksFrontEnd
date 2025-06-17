@@ -171,6 +171,7 @@ export type AddTask = {
   SelectOption: { value: string; label: string }[];
   setTasks: Dispatch<SetStateAction<Task[]>>;
   handleSubmit: any;
+  reset: any;
 };
 
 export const PriorityMeta: Record<string, { color: string; label: string }> = {

@@ -1,15 +1,13 @@
 import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import { TextField, IconButton, Typography, Avatar } from "@mui/material";
-import { Send as SendIcon } from "@mui/icons-material";
-import { motion, AnimatePresence } from "framer-motion";
-import { Share2 } from "lucide-react";
-import { useSidebar } from "../../hooks/useSidebarGet";
+import { useSidebar } from "../../servers/useSidebarGet";
+import { useUserId } from "../../servers/useUserId";
+import { useAnalyticsAI } from "../../servers/useAnatylicsAI";
+import { useAnalyticsAIGet } from "../../servers/useAnatiticsAIGet";
+import { SendIcon, Share2 } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { BASE_URL } from "../../constants";
-import { useAnalyticsAI } from "../../hooks/useAnatylicsAI";
-import { useAnalyticsAIGet } from "../../hooks/useAnatiticsAIGet";
-
-import { useUserId } from "../../hooks/useUserId";
 
 export const AnalyticsAI = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -106,18 +104,47 @@ export const AnalyticsAI = () => {
                       </Avatar>
 
                       <div
-                        className={`p-4 rounded-2xl shadow-sm  ${
+                        className={`p-4 rounded-2xl transition-all duration-200 hover:shadow-md ${
                           message.role === "user"
-                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
-                            : "bg-white border border-gray-100 text-gray-800 max-w-[700px]"
+                            ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm"
+                            : "bg-gradient-to-br from-slate-50 via-white to-slate-50 border border-slate-200/60 text-slate-800 max-w-[700px] shadow-lg ring-1 ring-slate-200/30 backdrop-blur-sm"
                         }`}
                       >
+                        {message.role === "assistant" && (
+                          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-slate-200/40">
+                            <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold shadow-sm">
+                              AI
+                            </div>
+                            <span className="text-xs text-slate-500 font-medium">
+                              Assistant
+                            </span>
+                          </div>
+                        )}
                         <Typography
                           variant="body1"
-                          className="whitespace-pre-wrap leading-relaxed"
+                          className={`whitespace-pre-wrap leading-relaxed ${
+                            message.role === "user"
+                              ? "text-white"
+                              : "font-medium text-purple-600"
+                          }`}
                         >
                           {message.content}
                         </Typography>
+                        {message.role === "assistant" && (
+                          <div className="mt-3 pt-2 border-t border-slate-200/30">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-slate-400 font-medium">
+                                ⚡ Powered by AI
+                              </span>
+                              <span className="text-xs text-slate-400">
+                                {new Date().toLocaleTimeString("uk-UA", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -129,20 +156,38 @@ export const AnalyticsAI = () => {
                     className="flex justify-start"
                   >
                     <div className="flex max-w-[85%] items-start gap-3 flex-row">
-                      <div className="p-4 rounded-2xl bg-white border border-gray-100 text-gray-800 flex items-center">
-                        <div className="flex space-x-1">
-                          {[0, 0.2, 0.4].map((delay, i) => (
-                            <motion.div
-                              key={i}
-                              animate={{ y: [0, -5, 0] }}
-                              transition={{
-                                repeat: Number.POSITIVE_INFINITY,
-                                duration: 1,
-                                delay,
-                              }}
-                              className="w-2 h-2 bg-indigo-600 rounded-full"
-                            />
-                          ))}
+                      <Avatar className="w-10 h-10 border border-gray-300 bg-indigo-100 text-indigo-600">
+                        <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 inline-flex">
+                          <Share2 />
+                        </div>
+                      </Avatar>
+                      <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-50 via-white to-slate-50 border border-slate-200/60 shadow-lg ring-1 ring-slate-200/30 backdrop-blur-sm">
+                        <div className="flex items-center gap-2 mb-2 pb-2 border-b border-slate-200/40">
+                          <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold shadow-sm">
+                            AI
+                          </div>
+                          <span className="text-xs text-slate-500 font-medium">
+                            Assistant
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-slate-600 font-medium">
+                            Друкую
+                          </span>
+                          <div className="flex space-x-1">
+                            {[0, 0.2, 0.4].map((delay, i) => (
+                              <motion.div
+                                key={i}
+                                animate={{ y: [0, -4, 0] }}
+                                transition={{
+                                  repeat: Number.POSITIVE_INFINITY,
+                                  duration: 0.8,
+                                  delay,
+                                }}
+                                className="w-1.5 h-1.5 bg-purple-500 rounded-full shadow-sm"
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>

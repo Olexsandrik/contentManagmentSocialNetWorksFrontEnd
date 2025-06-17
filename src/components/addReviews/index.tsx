@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { reviewsSettings, ReviewsSettings } from "../Auth/zodValidations";
 import { Input } from "../Input";
 
-import { useReviewsPost } from "../../hooks/useReviewsPost";
+import { useReviewsPost } from "../../servers/useReviewsPost";
 import { Select } from "../Select";
 
 export const AddReviews = ({ tabValue, toast }: any) => {

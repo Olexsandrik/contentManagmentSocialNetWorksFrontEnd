@@ -7,7 +7,7 @@ import {
   Message as MessageSquareIcon,
 } from "@mui/icons-material";
 
-import { useToast } from "../../hooks/useToast";
+import { useToast } from "../../servers/useToast";
 
 import { AddReviews } from "../addReviews";
 import { InternalizationForSettings } from "../InternalizationForSettings";

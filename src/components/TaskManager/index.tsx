@@ -7,45 +7,13 @@ import { useForm } from "react-hook-form";
 import { type AddTasks, addTasks } from "../Auth/zodValidations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AddTasks as NewTask } from "../AddTasks";
-import { usePaginationTask } from "../../hooks/usePaginationTask";
-import { color } from "framer-motion";
-
-// const tasks: Task[] = [
-//   {
-//     id: "1",
-
-//     name: "Fix login error",
-//     createdAt: "2025-04-21T09:00:00.000Z",
-//     updatedAt: "2025-04-21T10:00:00.000Z",
-//     priority: "HIGH_PRIORITY",
-//     desc: "Coolest Task",
-//   },
-//   {
-//     id: "2",
-
-//     name: "Create user dashboard UI",
-//     createdAt: "2025-04-20T15:30:00.000Z",
-//     updatedAt: "2025-04-20T17:00:00.000Z",
-//     priority: "IN_PROGRESS",
-//     desc: "",
-//   },
-//   {
-//     id: "3",
-
-//     name: "Write API docs",
-//     createdAt: "2025-04-18T11:45:00.000Z",
-//     updatedAt: "2025-04-19T08:20:00.000Z",
-//     priority: "COMPLETED",
-//     desc: "",
-//   },
-// ];
+import { usePaginationTask } from "../../servers/usePaginationTask";
 
 export const TaskManager = () => {
   const [page, setPage] = useState(1);
   const [modal, setModal] = useState(false);
   const { tasks, setTasks, meta } = usePaginationTask(
     "server/todoget",
-
     page,
     6
   );
@@ -154,6 +122,7 @@ export const TaskManager = () => {
           SelectOption={SelectOption}
           setTasks={setTasks}
           handleSubmit={handleSubmit}
+          reset={reset}
         />
       </div>
 

@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { useState } from "react";
-import { BarChart, LineChart, PieChart } from "lucide-react";
+import { BarChart, LineChart, PieChart, RefreshCw } from "lucide-react";
 import {
   AreaChart,
   Area,
@@ -24,7 +24,8 @@ import type {
   TabContentProps,
 } from "../../../src/app/type";
 import { Loading } from "../Loading";
-import { usePostGet } from "../../hooks/usePostGet";
+import { usePostGet } from "../../servers/usePostGet";
+import { useReloadDataFromInstagram } from "../../servers/useReloadDataFromInstagram";
 
 const mainTab = ["overview", "posts", "likes", "engagement"];
 
@@ -37,8 +38,10 @@ const tooltipStyle = {
 
 export const AnalyticsDashboard = () => {
   const [activeTab, setActiveTab] = useState<string>("overview");
-
-  const { posts, isLoading, error } = usePostGet("server/instagram-data");
+  const { handleReload, isLoadingReload } = useReloadDataFromInstagram(
+    "server/instagram-reload"
+  );
+  const { posts, isLoading, error } = usePostGet("server/instagram-data", isLoadingReload);
 
   const postCountByMonth: Record<string, { posts: number; likes: number }> = {};
 
@@ -96,6 +99,51 @@ export const AnalyticsDashboard = () => {
       <div className="flex flex-col">
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-white px-6 shadow-sm">
           <h1 className="text-xl font-medium text-[#212121]">Пост Аналітика</h1>
+          <div className="ml-auto">
+            <button
+              className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-white transition-all duration-300 transform ${
+                isLoadingReload
+                  ? "bg-[#6200ee]/80 scale-95 cursor-not-allowed"
+                  : "bg-[#6200ee] hover:bg-[#6200ee]/90 hover:scale-105 active:scale-95"
+              }`}
+              onClick={handleReload}
+              disabled={isLoadingReload}
+            >
+              <div className="relative">
+                <RefreshCw
+                  className={`h-4 w-4 transition-all duration-500 ${
+                    isLoadingReload
+                      ? "animate-spin text-white/80"
+                      : "text-white"
+                  }`}
+                />
+                {isLoadingReload && (
+                  <div className="absolute inset-0 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
+                )}
+              </div>
+              <span
+                className={`transition-all duration-300 ${isLoadingReload ? "text-white/80" : "text-white"}`}
+              >
+                {isLoadingReload ? "Оновлення..." : "Оновити"}
+              </span>
+              {isLoadingReload && (
+                <div className="flex space-x-1">
+                  <div
+                    className="w-1 h-1 bg-white/60 rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  ></div>
+                  <div
+                    className="w-1 h-1 bg-white/60 rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  ></div>
+                  <div
+                    className="w-1 h-1 bg-white/60 rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  ></div>
+                </div>
+              )}
+            </button>
+          </div>
         </header>
         <main className="flex flex-1 flex-col gap-6 p-6 md:gap-8 md:p-8">
           <div className="grid gap-6 md:grid-cols-3">

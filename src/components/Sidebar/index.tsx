@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { Avatar, Button } from "@mui/material";
 import { Home, BarChart, LogOut, Send, Settings, ListIcon } from "lucide-react";
-import { useSidebar } from "../../hooks/useSidebarGet";
+import { useSidebar } from "../../servers/useSidebarGet";
 import { BASE_URL } from "../../constants";
 import { Share2 } from "lucide-react";
 const navItems = [

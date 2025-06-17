@@ -1,9 +1,5 @@
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router";
-import { User } from "../../app/type";
-import { BASE_URL } from "../../constants";
+import { Outlet } from "react-router";
 import { Sidebar } from "../Sidebar";
-import { ClimbingBoxLoader } from "react-spinners";
 
 export const Layout = () => {
   return (
