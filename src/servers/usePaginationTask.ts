@@ -50,6 +50,6 @@ export function usePaginationTask(
         setIsLoading(false);
       }
     })();
-  }, [mainUrl, page, limit]);
+  }, [mainUrl, page, limit, setTasks, setMeta, setIsLoading, navigate]);
   return { tasks, setTasks, meta, error, isLoading };
 }

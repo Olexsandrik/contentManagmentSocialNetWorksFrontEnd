@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -24,7 +23,7 @@ import { useTasksAllGet } from "../../servers/useTasksAllGet";
 import { formatRelativeDate } from "../../utils/formatRelativeDate";
 
 export default function Dashboard() {
-  const { tasks, setTasks } = useTasksAllGet("server/todoall");
+  const { tasks } = useTasksAllGet("server/todoall");
 
   const totalTask = tasks.length;
   const totalDone = tasks.filter(
