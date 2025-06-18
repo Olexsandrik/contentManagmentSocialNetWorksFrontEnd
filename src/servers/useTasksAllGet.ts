@@ -1,7 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
 import { BASE_URL } from "../constants";
-import { usePatchPriority } from "./usePatchPriority";
-import { usePostTask } from "./usePostTask";
 
 export type Tasks = {
   id: string;
@@ -14,24 +12,45 @@ export type Tasks = {
 
 export const useTasksAllGet = (mainUrl: string) => {
   const [tasks, setTasks] = useState<Tasks[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
-      const res = await fetch(`${BASE_URL}/${mainUrl}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      setLoading(true);
+      setError(null);
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("No authentication token found");
+        }
 
-      if (!res.ok) {
-        new Error("Error with fetch data");
+        const res = await fetch(`${BASE_URL}/${mainUrl}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch tasks: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const data: Tasks[] = await res.json();
+        console.log("Data tasks", data);
+        setTasks(data);
+        setLoading(false);
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to fetch tasks";
+        setError(errorMessage);
+        console.error("Error fetching tasks:", err);
+      } finally {
       }
-
-      const data: Tasks[] = await res.json();
-      setTasks(data);
     })();
-  }, []);
+  }, [mainUrl]);
 
-  return { tasks, setTasks };
+  return { tasks, setTasks, loading, error };
 };

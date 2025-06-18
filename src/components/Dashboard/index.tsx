@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -17,14 +18,25 @@ import {
   Calendar,
   AlertCircle,
 } from "lucide-react";
-import { Card } from "@mui/material";
-import { Badge } from "lucide-react";
+import { Card, Chip } from "@mui/material";
 import { useTasksAllGet } from "../../servers/useTasksAllGet";
 import { formatRelativeDate } from "../../utils/formatRelativeDate";
 
 export default function Dashboard() {
   const { tasks } = useTasksAllGet("server/todoall");
 
+  if (!Array.isArray(tasks)) {
+    return (
+      <div className="p-4 md:p-10 bg-gray-50 min-h-screen w-full">
+        <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          Task Dashboard
+        </h1>
+        <div className="text-center py-10">
+          <p className="text-gray-600">Loading tasks...</p>
+        </div>
+      </div>
+    );
+  }
   const totalTask = tasks.length;
   const totalDone = tasks.filter(
     (item) => item.priority === "COMPLETED"
@@ -36,11 +48,24 @@ export default function Dashboard() {
     (task) => task.priority === "HIGH_PRIORITY"
   ).length;
 
+  // Calculate other tasks (not in the main 3 categories)
+  const otherTasks =
+    totalTask - totalDone - totalInProgress - totalHighPriority;
+
+  // Calculate date for "recent activity"
+  const getRecentActivityText = () => {
+    if (tasks.length === 0) return "No recent activity";
+    const latestTask = tasks.reduce((latest, task) =>
+      new Date(task.createdAt) > new Date(latest.createdAt) ? task : latest
+    );
+    return formatRelativeDate(latestTask.createdAt);
+  };
+
   const cardsBaseInfo = [
     {
       title: "TOTAL TASKS",
       count: totalTask,
-      createdAt: "last month",
+      createdAt: getRecentActivityText(),
       icon: <ListTodo className="h-10 w-10" />,
       color: "text-blue-500",
       bgColor: "bg-blue-50",
@@ -48,7 +73,7 @@ export default function Dashboard() {
     {
       title: "COMPLETED TASKS",
       count: totalDone,
-      createdAt: "last month",
+      createdAt: `${((totalDone / totalTask) * 100 || 0).toFixed(1)}% of total`,
       icon: <CheckCircle className="h-10 w-10" />,
       color: "text-emerald-500",
       bgColor: "bg-emerald-50",
@@ -56,7 +81,7 @@ export default function Dashboard() {
     {
       title: "TASKS IN PROGRESS",
       count: totalInProgress,
-      createdAt: "last month",
+      createdAt: `${((totalInProgress / totalTask) * 100 || 0).toFixed(1)}% of total`,
       icon: <Clock className="h-10 w-10" />,
       color: "text-orange-500",
       bgColor: "bg-orange-50",
@@ -64,7 +89,7 @@ export default function Dashboard() {
     {
       title: "HIGH PRIORITY TASKS",
       count: totalHighPriority,
-      createdAt: "last month",
+      createdAt: `${((totalHighPriority / totalTask) * 100 || 0).toFixed(1)}% of total`,
       icon: <AlertTriangle className="h-10 w-10" />,
       color: "text-red-500",
       bgColor: "bg-red-50",
@@ -75,12 +100,14 @@ export default function Dashboard() {
     { name: "Completed", value: totalDone },
     { name: "In Progress", value: totalInProgress },
     { name: "High priority", value: totalHighPriority },
+    ...(otherTasks > 0 ? [{ name: "Other", value: otherTasks }] : []),
   ];
 
   const COLORS = [
     "rgba(16, 185, 129, 0.9)",
     "rgba(249, 115, 22, 0.9)",
     "rgba(239, 68, 68, 0.9)",
+    "rgba(156, 163, 175, 0.9)", // Gray for "Other"
   ];
 
   const getPriorityColor = (priority: string) => {
@@ -91,7 +118,6 @@ export default function Dashboard() {
         return "bg-orange-100 text-orange-800";
       case "COMPLETED":
         return "bg-green-100 text-green-800";
-
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -192,19 +218,28 @@ export default function Dashboard() {
                             <CheckCircle className="h-5 w-5 text-emerald-500" />
                           )}
                           {task.priority === "IN_PROGRESS" && (
-                            <CheckCircle className="h-5 w-5 text-orange-500" />
+                            <Clock className="h-5 w-5 text-orange-500" />
                           )}
                           {task.priority === "HIGH_PRIORITY" && (
-                            <AlertCircle className="h-5 w-5 text-red-500" />
+                            <AlertTriangle className="h-5 w-5 text-red-500" />
+                          )}
+                          {![
+                            "COMPLETED",
+                            "IN_PROGRESS",
+                            "HIGH_PRIORITY",
+                          ].includes(task.priority) && (
+                            <AlertCircle className="h-5 w-5 text-gray-500" />
                           )}
                         </div>
                         <span className="font-medium">{task.name}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4 hidden md:table-cell">
-                      <Badge className={getPriorityColor(task.priority)}>
-                        {task.priority}
-                      </Badge>
+                      <Chip
+                        label={task.priority}
+                        size="small"
+                        className={getPriorityColor(task.priority)}
+                      />
                     </td>
                     <td className="py-3 px-4 text-gray-500 text-sm hidden sm:table-cell">
                       <div className="flex items-center">

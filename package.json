@@ -16,8 +16,11 @@
   },
   "dependencies": {
     "@ai-sdk/react": "^1.2.8",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.0.1",
+    "@mui/icons-material": "^6.4.12",
     "@mui/material": "^6.4.7",
     "@nextui-org/react": "^2.6.10",
     "@nextui-org/shared-icons": "^2.1.1",
